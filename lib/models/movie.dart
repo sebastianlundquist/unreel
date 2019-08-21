@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Movie {
   final int voteCount;
   final int id;
@@ -8,7 +10,7 @@ class Movie {
   final String posterPath;
   final String originalLanguage;
   final String originalTitle;
-  final List<int> genreIds;
+  final List<dynamic> genreIds;
   final String backdropPath;
   final bool adult;
   final String overview;
@@ -31,20 +33,20 @@ class Movie {
       this.releaseDate);
 
   Movie.fromJson(Map<String, dynamic> json)
-      : voteCount = json['vote_count'] ?? 0,
-        id = json['id'] ?? 0,
-        video = json['video'] ?? false,
-        voteAverage = json['vote_average'] ?? 0.0,
-        title = json['title'] ?? '',
-        popularity = json['popularity'] ?? 0.0,
-        posterPath = json['poster_path'] ?? '',
-        originalLanguage = json['original_language'] ?? '',
-        originalTitle = json['original_title'] ?? '',
-        genreIds = json['genre_ids'] ?? [],
-        backdropPath = json['backdrop_path'] ?? '',
-        adult = json['adult'] ?? false,
-        overview = json['overview'] ?? '',
-        releaseDate = json['release_date'] ?? '';
+      : voteCount = json['vote_count'],
+        id = json['id'],
+        video = json['video'],
+        voteAverage = json['vote_average'].toDouble(),
+        title = json['title'],
+        popularity = json['popularity'].toDouble(),
+        posterPath = json['poster_path'],
+        originalLanguage = json['original_language'],
+        originalTitle = json['original_title'],
+        genreIds = json['genre_ids'],
+        backdropPath = json['backdrop_path'],
+        adult = json['adult'],
+        overview = json['overview'],
+        releaseDate = json['release_date'];
 
   Map<String, dynamic> toJson() => {
         'vote_count': voteCount,

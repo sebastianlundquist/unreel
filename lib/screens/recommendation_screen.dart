@@ -21,7 +21,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   void updateUI(dynamic movieData, int index) {
     setState(() {
-      movieObject = Movie.fromJson(movieData);
+      movieObject = Movie.fromJson(movieData['results'][index]);
+      print(movieObject.title);
       movieIndex++;
     });
   }
@@ -50,11 +51,10 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                   child: RaisedButton(
                     child: Text('Get Movies'),
                     onPressed: () async {
+                      if (movieIndex == 20) movieIndex = 0;
                       if (movieIndex == 0) {
                         movieData = await Movies().getMovies(minReleaseDate,
                             maxReleaseDate, minVoteCount, minVoteAverage);
-                      } else if (movieIndex == 20) {
-                        movieIndex = 0;
                       }
                       updateUI(movieData, movieIndex);
                     },
