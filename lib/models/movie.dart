@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Movie {
   final int voteCount;
   final int id;
