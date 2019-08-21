@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/services/movies.dart';
+import 'package:movie_app/models/movie.dart';
 
 class RecommendationScreen extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   int minVoteCount = 100;
   double minVoteAverage = 7.0;
   dynamic movieData;
+  Movie movieObject;
   int movieIndex = 0;
 
   String title;
@@ -19,8 +21,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   void updateUI(dynamic movieData, int index) {
     setState(() {
-      title = movieData['results'][index]['title'];
-      description = movieData['results'][index]['overview'];
+      movieObject = Movie.fromJson(movieData);
       movieIndex++;
     });
   }
@@ -40,8 +41,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(title ?? ''),
-                      Text(description ?? ''),
+                      Text(movieObject != null ? movieObject.title : ''),
+                      Text(movieObject != null ? movieObject.overview : ''),
                     ],
                   ),
                 ),
