@@ -15,6 +15,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   dynamic movieData;
   Movie movieObject;
   int movieIndex = 0;
+  int page = 1;
 
   String title;
   String description;
@@ -51,10 +52,13 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                   child: RaisedButton(
                     child: Text('Get Movies'),
                     onPressed: () async {
-                      if (movieIndex == 20) movieIndex = 0;
+                      if (movieIndex == 20) {
+                        movieIndex = 0;
+                        page++;
+                      }
                       if (movieIndex == 0) {
                         movieData = await Movies().getMovies(minReleaseDate,
-                            maxReleaseDate, minVoteCount, minVoteAverage);
+                            maxReleaseDate, minVoteCount, minVoteAverage, page);
                       }
                       updateUI(movieData, movieIndex);
                     },
