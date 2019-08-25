@@ -128,6 +128,62 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
               style: Theme.of(context).textTheme.body1,
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text('Original Title:'),
+                    ),
+                    Expanded(
+                      child: Text(
+                          movieObject != null ? movieObject.originalTitle : ''),
+                      flex: 2,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text('Genres:'),
+                    ),
+                    Expanded(
+                      child: Text(''),
+                      flex: 2,
+                    )
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text('Release Date:'),
+                    ),
+                    Expanded(
+                      child: Text(movieObject != null
+                          ? movieObject.releaseDate.toString()
+                          : ''),
+                      flex: 2,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text('Original Language:'),
+                    ),
+                    Expanded(
+                      child: Text(movieObject != null
+                          ? movieObject.originalLanguage
+                          : ''),
+                      flex: 2,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: Align(
               alignment: Alignment.bottomCenter,
