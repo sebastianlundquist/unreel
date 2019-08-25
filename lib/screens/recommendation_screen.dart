@@ -69,41 +69,52 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       textBaseline: TextBaseline.alphabetic,
                       children: <Widget>[
-                        Column(
+                        Flexible(
+                          child: Text(
+                            movieObject != null ? movieObject.title : '',
+                            style: Theme.of(context).textTheme.title,
+                          ),
+                        ),
+                        Row(
                           children: <Widget>[
-                            IconTheme(
-                              data: IconThemeData(
-                                color: Colors.amber,
-                                size: 16,
-                              ),
-                              child:
-                                  StarDisplay(value: movieObject.voteAverage),
+                            Column(
+                              children: <Widget>[
+                                IconTheme(
+                                  data: IconThemeData(
+                                    color: Colors.amber,
+                                    size: 16,
+                                  ),
+                                  child: StarDisplay(
+                                      value: movieObject.voteAverage),
+                                ),
+                                Text(
+                                  movieObject != null
+                                      ? movieObject.voteCount.toString() +
+                                          ' votes'
+                                      : '',
+                                  style: Theme.of(context).textTheme.subtitle,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 8.0,
                             ),
                             Text(
                               movieObject != null
-                                  ? movieObject.voteCount.toString() + ' votes'
+                                  ? movieObject.voteAverage.toString()
                                   : '',
-                              style: Theme.of(context).textTheme.subtitle,
+                              style: Theme.of(context).textTheme.display1,
                             ),
                           ],
                         ),
-                        Text(
-                          movieObject != null
-                              ? movieObject.voteAverage.toString()
-                              : '',
-                          style: Theme.of(context).textTheme.display1,
-                        )
                       ],
-                    ),
-                    Text(
-                      movieObject != null ? movieObject.title : '',
-                      style: Theme.of(context).textTheme.title,
                     ),
                   ],
                 ),
