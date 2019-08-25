@@ -7,7 +7,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
+      theme: ThemeData(
+          fontFamily: 'Roboto',
+          backgroundColor: Color(0xFF131C25),
+          scaffoldBackgroundColor: Color(0xFF000000),
+          accentColor: Colors.white,
+          textTheme: Typography.whiteMountainView),
       home: RecommendationScreen(),
     );
   }
