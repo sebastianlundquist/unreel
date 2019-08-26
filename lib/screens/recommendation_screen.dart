@@ -27,7 +27,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   String title;
   String description;
 
-  dynamic backdropImage = AssetImage('images/transparent.png');
+  dynamic backdropImage = AssetImage('images/transparent_backdrop.png');
 
   void updateUI(dynamic movieData, int index) {
     setState(() {
@@ -86,7 +86,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
             children: <Widget>[
               ShaderMask(
                 child: FadeInImage(
-                  placeholder: AssetImage('images/transparent.png'),
+                  placeholder: AssetImage('images/transparent_backdrop.png'),
                   image: backdropImage,
                 ),
                 shaderCallback: (Rect bounds) {
