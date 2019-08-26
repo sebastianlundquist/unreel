@@ -27,7 +27,6 @@ String getGenreNameFromId(int id) {
 }
 
 List<String> getGenreNamesFromIdList(List<dynamic> ids) {
-  print(ids.join(', '));
   var list = List<String>();
   for (int i = 0; i < ids.length; i++) {
     list.add(getGenreNameFromId(ids[i]));
