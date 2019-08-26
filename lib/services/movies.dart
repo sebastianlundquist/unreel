@@ -7,7 +7,7 @@ class Movies {
   Future<dynamic> getMovies(DateTime minReleaseDate, DateTime maxReleaseDate,
       int minVoteCount, double minVoteAverage, int page) async {
     String completeURL =
-        '$url/discover/movie?api_key=$apiKey&language=en-US&sort_by=popularity.desc&include_adult=true&include_video=false&page=$page&primary_release_date.gte=${minReleaseDate.toIso8601String()}&primary_release_date.lte=${maxReleaseDate.toIso8601String()}';
+        '$url/discover/movie?api_key=$apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=$page&primary_release_date.gte=${minReleaseDate.toIso8601String()}&primary_release_date.lte=${maxReleaseDate.toIso8601String()}';
     NetworkHelper networkHelper = NetworkHelper(completeURL);
     print(completeURL);
     var movieData = await networkHelper.getData();
