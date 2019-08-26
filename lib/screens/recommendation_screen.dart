@@ -57,7 +57,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   List<Widget> genreWidgets(List<dynamic> ids) {
     var list = List<Widget>();
-    for (int i = 0; i < ids.length; i++) {
+    int count = ids.length > 3 ? 3 : ids.length;
+    for (int i = 0; i < count; i++) {
       list.add(
         Padding(
           padding: i != 0
