@@ -23,6 +23,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   Movie movieObject;
   int movieIndex = 0;
   int page = 1;
+  bool isFavorite = false;
 
   String title;
   String description;
@@ -61,7 +62,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: Chip(
-            backgroundColor: Colors.blueGrey,
+            backgroundColor: Colors.blueGrey[900],
             labelPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
             label: Text(
               getGenreNameFromId(ids[i]),
@@ -73,6 +74,23 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
         ),
       );
     }
+    list.add(
+      IconButton(
+          icon: isFavorite
+              ? Icon(
+                  Icons.favorite,
+                  color: Colors.white,
+                )
+              : Icon(
+                  Icons.favorite_border,
+                  color: Colors.white,
+                ),
+          onPressed: () {
+            setState(() {
+              isFavorite = !isFavorite;
+            });
+          }),
+    );
     return list;
   }
 
