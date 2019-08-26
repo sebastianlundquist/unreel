@@ -92,7 +92,9 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                                     size: 16,
                                   ),
                                   child: StarDisplay(
-                                      value: movieObject.voteAverage),
+                                      value: movieObject != null
+                                          ? movieObject.voteAverage
+                                          : 5),
                                 ),
                                 Text(
                                   movieObject != null
