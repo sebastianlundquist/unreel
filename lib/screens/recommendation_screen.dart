@@ -27,6 +27,16 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   String title;
   String description;
 
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   dynamic backdropImage = AssetImage('images/transparent_backdrop.png');
 
   void updateUI(dynamic movieData, int index) {
@@ -232,27 +242,43 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
               ],
             ),
           ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: RaisedButton(
-                child: Text('Get Movies'),
-                onPressed: () async {
-                  if (movieIndex == 20) {
-                    movieIndex = 0;
-                    page++;
-                  }
-                  if (movieIndex == 0) {
-                    movieData = await Movies().getMovies(minReleaseDate,
-                        maxReleaseDate, minVoteCount, minVoteAverage, page);
-                  }
-                  updateUI(movieData, movieIndex);
-                },
-              ),
-            ),
-          ),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            title: Text('Favorites'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.track_changes),
+            title: Text('Discover'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            title: Text('Settings'),
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blueGrey[900],
+        unselectedItemColor: Colors.blueGrey[300],
+        onTap: _onItemTapped,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          if (movieIndex == 20) {
+            movieIndex = 0;
+            page++;
+          }
+          if (movieIndex == 0) {
+            movieData = await Movies().getMovies(minReleaseDate, maxReleaseDate,
+                minVoteCount, minVoteAverage, page);
+          }
+          updateUI(movieData, movieIndex);
+        },
+        child: Icon(Icons.refresh),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
