@@ -15,8 +15,8 @@ class RecommendationScreen extends StatefulWidget {
 }
 
 class _RecommendationScreenState extends State<RecommendationScreen> {
-  int minReleaseDate = 2000;
-  int maxReleaseDate = 2010;
+  DateTime minReleaseDate = DateTime(2000, 1, 1);
+  DateTime maxReleaseDate = DateTime(2010, 12, 31);
   int minVoteCount = 100;
   double minVoteAverage = 7.0;
   dynamic movieData;
