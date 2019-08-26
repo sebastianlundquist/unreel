@@ -60,7 +60,9 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     for (int i = 0; i < ids.length; i++) {
       list.add(
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          padding: i != 0
+              ? const EdgeInsets.symmetric(horizontal: 4.0)
+              : EdgeInsets.fromLTRB(0.0, 0.0, 4.0, 0.0),
           child: Chip(
             backgroundColor: Colors.blueGrey[900],
             labelPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
@@ -74,23 +76,6 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
         ),
       );
     }
-    list.add(
-      IconButton(
-          icon: isFavorite
-              ? Icon(
-                  Icons.favorite,
-                  color: Colors.white,
-                )
-              : Icon(
-                  Icons.favorite_border,
-                  color: Colors.white,
-                ),
-          onPressed: () {
-            setState(() {
-              isFavorite = !isFavorite;
-            });
-          }),
-    );
     return list;
   }
 
@@ -186,15 +171,42 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: genreWidgets(
-                movieObject != null && movieObject.genreIds != null
-                    ? movieObject.genreIds
-                    : []),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: genreWidgets(
+                      movieObject != null && movieObject.genreIds != null
+                          ? movieObject.genreIds
+                          : []),
+                ),
+                IconButton(
+                  icon: isFavorite
+                      ? Icon(
+                          Icons.favorite,
+                          color: Colors.white,
+                        )
+                      : Icon(
+                          Icons.favorite_border,
+                          color: Colors.white,
+                        ),
+                  onPressed: () {
+                    setState(
+                      () {
+                        isFavorite = !isFavorite;
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: ListView(
+              padding: EdgeInsets.all(0.0),
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
