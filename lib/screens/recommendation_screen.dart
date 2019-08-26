@@ -70,8 +70,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   void initState() {
     setState(() {
       movieObject = Movie.fromJson(shawshank);
-      backdropImage =
-          NetworkImage('$imageURL$backdropSize${movieObject.backdropPath}');
+      backdropImage = AssetImage('images/shawshank_backdrop.jpg');
     });
     super.initState();
   }
