@@ -193,69 +193,76 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                     ? movieObject.genreIds
                     : []),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              movieObject != null ? movieObject.overview : '',
-              style: Theme.of(context).textTheme.body1,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
+          Expanded(
+            child: ListView(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text('Original Title:'),
-                    ),
-                    Expanded(
-                      child: Text(
-                          movieObject != null ? movieObject.originalTitle : ''),
-                      flex: 2,
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    movieObject != null ? movieObject.overview : '',
+                    style: Theme.of(context).textTheme.body1,
+                  ),
                 ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text('Genres:'),
-                    ),
-                    Expanded(
-                      child: Text(
-                          movieObject != null && movieObject.genreIds != null
-                              ? getGenreNamesFromIdList(movieObject.genreIds)
-                                  .join(', ')
-                              : ''),
-                      flex: 2,
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text('Release Date:'),
-                    ),
-                    Expanded(
-                      child: Text(movieObject != null
-                          ? movieObject.releaseDate.toString()
-                          : ''),
-                      flex: 2,
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text('Original Language:'),
-                    ),
-                    Expanded(
-                      child: Text(movieObject != null
-                          ? findLanguage(movieObject.originalLanguage)
-                          : ''),
-                      flex: 2,
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text('Original Title:'),
+                          ),
+                          Expanded(
+                            child: Text(movieObject != null
+                                ? movieObject.originalTitle
+                                : ''),
+                            flex: 2,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text('Genres:'),
+                          ),
+                          Expanded(
+                            child: Text(movieObject != null &&
+                                    movieObject.genreIds != null
+                                ? getGenreNamesFromIdList(movieObject.genreIds)
+                                    .join(', ')
+                                : ''),
+                            flex: 2,
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text('Release Date:'),
+                          ),
+                          Expanded(
+                            child: Text(movieObject != null
+                                ? movieObject.releaseDate.toString()
+                                : ''),
+                            flex: 2,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text('Original Language:'),
+                          ),
+                          Expanded(
+                            child: Text(movieObject != null
+                                ? findLanguage(movieObject.originalLanguage)
+                                : ''),
+                            flex: 2,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
