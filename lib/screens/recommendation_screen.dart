@@ -4,6 +4,7 @@ import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/components/star_display.dart';
 import 'package:movie_app/models/shawshank.dart';
 import 'package:movie_app/models/languages.dart';
+import 'package:movie_app/models/genres.dart';
 
 const imageURL = 'https://image.tmdb.org/t/p';
 const backdropSize = '/w780';
@@ -160,7 +161,11 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                       child: Text('Genres:'),
                     ),
                     Expanded(
-                      child: Text(''),
+                      child: Text(
+                          movieObject != null && movieObject.genreIds != null
+                              ? getGenreNamesFromIdList(movieObject.genreIds)
+                                  .join(', ')
+                              : ''),
                       flex: 2,
                     )
                   ],
