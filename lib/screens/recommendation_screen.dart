@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/services/movies.dart';
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/components/star_display.dart';
+import 'package:movie_app/models/shawshank.dart';
 
 const imageURL = 'https://image.tmdb.org/t/p';
 const backdropSize = '/w780';
@@ -31,6 +32,16 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
       movieObject = Movie.fromJson(movieData['results'][index]);
       print(movieObject.title);
       movieIndex++;
+      backdropImage =
+          NetworkImage('$imageURL$backdropSize${movieObject.backdropPath}');
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      movieObject = Movie.fromJson(shawshank);
       backdropImage =
           NetworkImage('$imageURL$backdropSize${movieObject.backdropPath}');
     });
