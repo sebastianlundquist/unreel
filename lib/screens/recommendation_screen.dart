@@ -39,6 +39,28 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     });
   }
 
+  List<Widget> genreWidgets(List<dynamic> ids) {
+    var list = List<Widget>();
+    for (int i = 0; i < ids.length; i++) {
+      list.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Chip(
+            backgroundColor: Colors.blueGrey,
+            labelPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
+            label: Text(
+              getGenreNameFromId(ids[i]),
+              style: Theme.of(context).textTheme.button.copyWith(
+                    fontSize: 12,
+                  ),
+            ),
+          ),
+        ),
+      );
+    }
+    return list;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -131,6 +153,13 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                 ),
               ),
             ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: genreWidgets(
+                movieObject != null && movieObject.genreIds != null
+                    ? movieObject.genreIds
+                    : []),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
