@@ -4,8 +4,6 @@ import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/components/star_display.dart';
 
 const imageURL = 'https://image.tmdb.org/t/p';
-const posterSmallSize = '/w154';
-const posterLargeSize = '/w500';
 const backdropSize = '/w780';
 
 class RecommendationScreen extends StatefulWidget {
@@ -26,7 +24,6 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   String title;
   String description;
 
-  dynamic img = AssetImage('images/transparent.png');
   dynamic backdropImage = AssetImage('images/transparent.png');
 
   void updateUI(dynamic movieData, int index) {
@@ -34,7 +31,6 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
       movieObject = Movie.fromJson(movieData['results'][index]);
       print(movieObject.title);
       movieIndex++;
-      img = NetworkImage('$imageURL$posterSmallSize${movieObject.posterPath}');
       backdropImage =
           NetworkImage('$imageURL$backdropSize${movieObject.backdropPath}');
     });
