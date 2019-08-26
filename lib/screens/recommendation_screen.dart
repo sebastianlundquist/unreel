@@ -3,6 +3,7 @@ import 'package:movie_app/services/movies.dart';
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/components/star_display.dart';
 import 'package:movie_app/models/shawshank.dart';
+import 'package:movie_app/models/languages.dart';
 
 const imageURL = 'https://image.tmdb.org/t/p';
 const backdropSize = '/w780';
@@ -184,7 +185,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                     ),
                     Expanded(
                       child: Text(movieObject != null
-                          ? movieObject.originalLanguage
+                          ? findLanguage(movieObject.originalLanguage)
                           : ''),
                       flex: 2,
                     ),
