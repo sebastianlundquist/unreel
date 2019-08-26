@@ -36,6 +36,11 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
       movieIndex++;
       backdropImage =
           NetworkImage('$imageURL$backdropSize${movieObject.backdropPath}');
+      if (movieIndex < 20)
+        precacheImage(
+            NetworkImage(
+                '$imageURL$backdropSize${Movie.fromJson(movieData['results'][movieIndex]).backdropPath}'),
+            context);
     });
   }
 
@@ -63,12 +68,12 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   @override
   void initState() {
-    super.initState();
     setState(() {
       movieObject = Movie.fromJson(shawshank);
       backdropImage =
           NetworkImage('$imageURL$backdropSize${movieObject.backdropPath}');
     });
+    super.initState();
   }
 
   @override
