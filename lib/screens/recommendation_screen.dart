@@ -9,6 +9,13 @@ import 'package:movie_app/models/genres.dart';
 const imageURL = 'https://image.tmdb.org/t/p';
 const backdropSize = '/w780';
 
+Movie movieObject = Movie.fromJson(shawshank);
+ImageProvider backdropImage = AssetImage('images/shawshank_backdrop.jpg');
+dynamic movieData;
+int movieIndex = 0;
+int page = 1;
+bool isFavorite = false;
+
 class RecommendationScreen extends StatefulWidget {
   @override
   _RecommendationScreenState createState() => _RecommendationScreenState();
@@ -19,11 +26,6 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   DateTime maxReleaseDate = DateTime(2010, 12, 31);
   int minVoteCount = 100;
   double minVoteAverage = 7.0;
-  dynamic movieData;
-  Movie movieObject;
-  int movieIndex = 0;
-  int page = 1;
-  bool isFavorite = false;
 
   String title;
   String description;
@@ -66,15 +68,6 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
       );
     }
     return list;
-  }
-
-  @override
-  void initState() {
-    setState(() {
-      movieObject = Movie.fromJson(shawshank);
-      backdropImage = AssetImage('images/shawshank_backdrop.jpg');
-    });
-    super.initState();
   }
 
   @override
