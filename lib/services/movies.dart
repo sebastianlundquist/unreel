@@ -13,4 +13,12 @@ class Movies {
     var movieData = await networkHelper.getData();
     return movieData;
   }
+
+  Future<dynamic> getMovieDetails(int id) async {
+    String completeURL = '$url/movie/$id?api_key=$apiKey&language=en-US';
+    NetworkHelper networkHelper = NetworkHelper(completeURL);
+    print(completeURL);
+    var movieData = await networkHelper.getData();
+    return movieData;
+  }
 }
