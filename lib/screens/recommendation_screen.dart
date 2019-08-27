@@ -11,7 +11,7 @@ const backdropSize = '/w780';
 
 Movie movieObject = Movie.fromJson(shawshank);
 ImageProvider backdropImage = AssetImage('images/shawshank_backdrop.jpg');
-dynamic movieData;
+dynamic discoveryListData;
 int movieIndex = 0;
 int page = 1;
 bool isFavorite = false;
@@ -30,16 +30,16 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   String title;
   String description;
 
-  void updateUI(dynamic movieData, int index) {
+  void updateUI(dynamic discoveryListData, int index) {
     setState(() {
-      movieObject = Movie.fromJson(movieData['results'][index]);
+      movieObject = Movie.fromJson(discoveryListData['results'][index]);
       movieIndex++;
       backdropImage =
           NetworkImage('$imageURL$backdropSize${movieObject.backdropPath}');
       if (movieIndex < 20)
         precacheImage(
             NetworkImage(
-                '$imageURL$backdropSize${Movie.fromJson(movieData['results'][movieIndex]).backdropPath}'),
+                '$imageURL$backdropSize${Movie.fromJson(discoveryListData['results'][movieIndex]).backdropPath}'),
             context);
     });
   }
@@ -267,10 +267,10 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                 page++;
               }
               if (movieIndex == 0) {
-                movieData = await Movies().getMovies(minReleaseDate,
+                discoveryListData = await Movies().getMovies(minReleaseDate,
                     maxReleaseDate, minVoteCount, minVoteAverage, page);
               }
-              updateUI(movieData, movieIndex);
+              updateUI(discoveryListData, movieIndex);
             },
             child: Icon(Icons.refresh),
           ),
