@@ -8,10 +8,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          fontFamily: 'Roboto',
-          backgroundColor: Color(0xFF131C25),
-          scaffoldBackgroundColor: Color(0xFF000000),
-          accentColor: Colors.white,
+          brightness: Brightness.dark,
+          primaryColor: Colors.blueGrey[800],
+          accentColor: Color(0xFF38CCAC),
+          scaffoldBackgroundColor: Colors.blueGrey[800],
           textTheme: Typography.whiteMountainView),
       home: RecommendationScreen(),
     );

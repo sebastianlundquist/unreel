@@ -43,7 +43,6 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   void updateUI(dynamic movieData, int index) {
     setState(() {
       movieObject = Movie.fromJson(movieData['results'][index]);
-      print(movieObject.title);
       movieIndex++;
       backdropImage =
           NetworkImage('$imageURL$backdropSize${movieObject.backdropPath}');
@@ -66,6 +65,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
               : EdgeInsets.fromLTRB(0.0, 0.0, 4.0, 0.0),
           child: Chip(
             backgroundColor: Colors.blueGrey[900],
+            elevation: 8.0,
             labelPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
             label: Text(
               getGenreNameFromId(ids[i]),
@@ -106,7 +106,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                   return LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Color(0x00000000), Color(0xFF000000)],
+                    colors: [Color(0x00000000), Color(0xFF37474F)],
                     stops: [
                       0.5,
                       1.0,
@@ -116,7 +116,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                 blendMode: BlendMode.srcATop,
               ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -188,11 +188,9 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                   icon: isFavorite
                       ? Icon(
                           Icons.favorite,
-                          color: Colors.white,
                         )
                       : Icon(
                           Icons.favorite_border,
-                          color: Colors.white,
                         ),
                   onPressed: () {
                     setState(
@@ -298,8 +296,6 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueGrey[900],
-        unselectedItemColor: Colors.blueGrey[300],
         onTap: _onItemTapped,
       ),
       floatingActionButton: FloatingActionButton(
