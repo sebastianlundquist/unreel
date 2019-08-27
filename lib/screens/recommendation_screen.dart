@@ -28,18 +28,6 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   String title;
   String description;
 
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  dynamic backdropImage = AssetImage('images/transparent_backdrop.png');
-
   void updateUI(dynamic movieData, int index) {
     setState(() {
       movieObject = Movie.fromJson(movieData['results'][index]);
@@ -91,79 +79,183 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Stack(
-            alignment: Alignment.bottomCenter,
-            children: <Widget>[
-              ShaderMask(
-                child: FadeInImage(
-                  placeholder: AssetImage('images/transparent_backdrop.png'),
-                  image: backdropImage,
-                ),
-                shaderCallback: (Rect bounds) {
-                  return LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0x00000000), Color(0xFF37474F)],
-                    stops: [
-                      0.5,
-                      1.0,
-                    ],
-                  ).createShader(bounds);
-                },
-                blendMode: BlendMode.srcATop,
+    return Column(
+      children: <Widget>[
+        Stack(
+          alignment: Alignment.bottomCenter,
+          children: <Widget>[
+            ShaderMask(
+              child: FadeInImage(
+                placeholder: AssetImage('images/transparent_backdrop.png'),
+                image: backdropImage,
               ),
+              shaderCallback: (Rect bounds) {
+                return LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0x00000000), Color(0xFF37474F)],
+                  stops: [
+                    0.5,
+                    1.0,
+                  ],
+                ).createShader(bounds);
+              },
+              blendMode: BlendMode.srcATop,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          movieObject != null ? movieObject.title : '',
+                          style: Theme.of(context).textTheme.title,
+                        ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              IconTheme(
+                                data: IconThemeData(
+                                  color: Colors.amber,
+                                  size: 16,
+                                ),
+                                child: StarDisplay(
+                                    value: movieObject != null
+                                        ? movieObject.voteAverage
+                                        : 5),
+                              ),
+                              Text(
+                                movieObject != null
+                                    ? movieObject.voteCount.toString() +
+                                        ' votes'
+                                    : '',
+                                style: Theme.of(context).textTheme.subtitle,
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: 8.0,
+                          ),
+                          Text(
+                            movieObject != null
+                                ? movieObject.voteAverage.toString()
+                                : '',
+                            style: Theme.of(context).textTheme.display1,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: genreWidgets(
+                    movieObject != null && movieObject.genreIds != null
+                        ? movieObject.genreIds
+                        : []),
+              ),
+              IconButton(
+                icon: isFavorite
+                    ? Icon(
+                        Icons.favorite,
+                      )
+                    : Icon(
+                        Icons.favorite_border,
+                      ),
+                onPressed: () {
+                  setState(
+                    () {
+                      isFavorite = !isFavorite;
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            padding: EdgeInsets.all(0.0),
+            children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  movieObject != null ? movieObject.overview : '',
+                  style: Theme.of(context).textTheme.body1,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      textBaseline: TextBaseline.alphabetic,
                       children: <Widget>[
-                        Flexible(
-                          child: Text(
-                            movieObject != null ? movieObject.title : '',
-                            style: Theme.of(context).textTheme.title,
-                          ),
+                        Expanded(
+                          child: Text('Original Title:'),
                         ),
-                        Row(
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                IconTheme(
-                                  data: IconThemeData(
-                                    color: Colors.amber,
-                                    size: 16,
-                                  ),
-                                  child: StarDisplay(
-                                      value: movieObject != null
-                                          ? movieObject.voteAverage
-                                          : 5),
-                                ),
-                                Text(
-                                  movieObject != null
-                                      ? movieObject.voteCount.toString() +
-                                          ' votes'
-                                      : '',
-                                  style: Theme.of(context).textTheme.subtitle,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Text(
-                              movieObject != null
-                                  ? movieObject.voteAverage.toString()
-                                  : '',
-                              style: Theme.of(context).textTheme.display1,
-                            ),
-                          ],
+                        Expanded(
+                          child: Text(movieObject != null
+                              ? movieObject.originalTitle
+                              : ''),
+                          flex: 2,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text('Genres:'),
+                        ),
+                        Expanded(
+                          child: Text(movieObject != null &&
+                                  movieObject.genreIds != null
+                              ? getGenreNamesFromIdList(movieObject.genreIds)
+                                  .join(', ')
+                              : ''),
+                          flex: 2,
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text('Release Date:'),
+                        ),
+                        Expanded(
+                          child: Text(movieObject != null
+                              ? movieObject.releaseDate.toString()
+                              : ''),
+                          flex: 2,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text('Original Language:'),
+                        ),
+                        Expanded(
+                          child: Text(movieObject != null
+                              ? findLanguage(movieObject.originalLanguage)
+                              : ''),
+                          flex: 2,
                         ),
                       ],
                     ),
@@ -172,191 +264,25 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: genreWidgets(
-                      movieObject != null && movieObject.genreIds != null
-                          ? movieObject.genreIds
-                          : []),
-                ),
-                IconButton(
-                  icon: isFavorite
-                      ? Icon(
-                          Icons.favorite,
-                        )
-                      : Icon(
-                          Icons.favorite_border,
-                        ),
-                  onPressed: () {
-                    setState(
-                      () {
-                        isFavorite = !isFavorite;
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: FloatingActionButton(
+            onPressed: () async {
+              if (movieIndex == 20) {
+                movieIndex = 0;
+                page++;
+              }
+              if (movieIndex == 0) {
+                movieData = await Movies().getMovies(minReleaseDate,
+                    maxReleaseDate, minVoteCount, minVoteAverage, page);
+              }
+              updateUI(movieData, movieIndex);
+            },
+            child: Icon(Icons.refresh),
           ),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(0.0),
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    movieObject != null ? movieObject.overview : '',
-                    style: Theme.of(context).textTheme.body1,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Text('Original Title:'),
-                          ),
-                          Expanded(
-                            child: Text(movieObject != null
-                                ? movieObject.originalTitle
-                                : ''),
-                            flex: 2,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Text('Genres:'),
-                          ),
-                          Expanded(
-                            child: Text(movieObject != null &&
-                                    movieObject.genreIds != null
-                                ? getGenreNamesFromIdList(movieObject.genreIds)
-                                    .join(', ')
-                                : ''),
-                            flex: 2,
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Text('Release Date:'),
-                          ),
-                          Expanded(
-                            child: Text(movieObject != null
-                                ? movieObject.releaseDate.toString()
-                                : ''),
-                            flex: 2,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Text('Original Language:'),
-                          ),
-                          Expanded(
-                            child: Text(movieObject != null
-                                ? findLanguage(movieObject.originalLanguage)
-                                : ''),
-                            flex: 2,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            title: Text('Favorites'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.track_changes),
-            title: Text('Discover'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            title: Text('Settings'),
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          if (movieIndex == 20) {
-            movieIndex = 0;
-            page++;
-          }
-          if (movieIndex == 0) {
-            movieData = await Movies().getMovies(minReleaseDate, maxReleaseDate,
-                minVoteCount, minVoteAverage, page);
-          }
-          updateUI(movieData, movieIndex);
-        },
-        child: Icon(Icons.refresh),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        ),
+      ],
     );
   }
 }
-
-/*
-Padding(
-padding: const EdgeInsets.all(16.0),
-child: Center(
-child: Column(
-children: <Widget>[
-Expanded(
-child: Column(
-mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-crossAxisAlignment: CrossAxisAlignment.center,
-children: <Widget>[
-Text(
-movieObject != null ? movieObject.overview : '',
-style: Theme.of(context).textTheme.body1,
-),
-],
-),
-),
-Expanded(
-child: RaisedButton(
-child: Text('Get Movies'),
-onPressed: () async {
-if (movieIndex == 20) {
-movieIndex = 0;
-page++;
-}
-if (movieIndex == 0) {
-movieData = await Movies().getMovies(
-minReleaseDate,
-maxReleaseDate,
-minVoteCount,
-minVoteAverage,
-page);
-}
-updateUI(movieData, movieIndex);
-},
-),
-),
-],
-),
-),
-),
-*/

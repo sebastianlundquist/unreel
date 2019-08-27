@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/screens/recommendation_screen.dart';
+import 'package:movie_app/screens/navigation_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
           accentColor: Color(0xFF38CCAC),
           scaffoldBackgroundColor: Colors.blueGrey[800],
           textTheme: Typography.whiteMountainView),
-      home: RecommendationScreen(),
+      home: NavigationScreen(),
     );
   }
 }
