@@ -86,7 +86,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                 return LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Color(0x00000000), Color(0xFF37474F)],
+                  colors: [Color(0x00000000), Color(0xFF131C25)],
                   stops: [
                     0.5,
                     1.0,
