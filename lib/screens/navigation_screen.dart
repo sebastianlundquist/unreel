@@ -45,7 +45,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        backgroundColor: Colors.blueGrey[900],
+        backgroundColor: Color(0xFF1D2733),
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
     );

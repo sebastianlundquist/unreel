@@ -23,7 +23,7 @@ class _GenresBarState extends State<GenresBar> {
               ? const EdgeInsets.symmetric(horizontal: 4.0)
               : EdgeInsets.fromLTRB(0.0, 0.0, 4.0, 0.0),
           child: Chip(
-            backgroundColor: Colors.blueGrey[900],
+            backgroundColor: Color(0xFF1D2733),
             elevation: 8.0,
             labelPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
             label: Text(
