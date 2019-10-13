@@ -16,6 +16,17 @@ class MovieDescription extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
+              movieObject != null ? movieObject.tagline : '',
+              style: Theme.of(context)
+                  .textTheme
+                  .body1
+                  .copyWith(fontStyle: FontStyle.italic),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+            child: Text(
               movieObject != null ? movieObject.overview : '',
               style: Theme.of(context).textTheme.body1,
             ),
