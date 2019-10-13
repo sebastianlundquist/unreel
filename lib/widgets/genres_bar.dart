@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/movie.dart';
 
 bool isFavorite = false;
+String genresString = "";
 
 class GenresBar extends StatefulWidget {
   GenresBar({@required this.movieObject});
@@ -12,9 +12,10 @@ class GenresBar extends StatefulWidget {
 }
 
 class _GenresBarState extends State<GenresBar> {
-  List<Widget> genreWidgets(List<dynamic> ids) {
+  List<Widget> genreWidgets(List<dynamic> genres) {
     var list = List<Widget>();
-    int count = ids.length > 3 ? 3 : ids.length;
+    genresString = "";
+    int count = genres.length > 3 ? 3 : genres.length;
     for (int i = 0; i < count; i++) {
       list.add(
         Padding(
@@ -26,7 +27,7 @@ class _GenresBarState extends State<GenresBar> {
             elevation: 8.0,
             labelPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
             label: Text(
-              getGenreNameFromId(ids[i]),
+              genres[i]['name'],
               style: Theme.of(context).textTheme.button.copyWith(
                     fontSize: 12,
                   ),
@@ -34,6 +35,10 @@ class _GenresBarState extends State<GenresBar> {
           ),
         ),
       );
+      genresString += genres[i]['name'];
+      if (i < genres.length - 1) {
+        genresString += ', ';
+      }
     }
     return list;
   }
@@ -47,10 +52,10 @@ class _GenresBarState extends State<GenresBar> {
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: genreWidgets(widget.movieObject != null &&
-                    widget.movieObject.genreIds != null
-                ? widget.movieObject.genreIds
-                : []),
+            children: genreWidgets(
+                widget.movieObject != null && widget.movieObject.genres != null
+                    ? widget.movieObject.genres
+                    : []),
           ),
           IconButton(
             icon: isFavorite

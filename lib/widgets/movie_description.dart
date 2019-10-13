@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/languages.dart';
 import 'package:movie_app/models/movie.dart';
+import 'package:movie_app/widgets/genres_bar.dart';
 import 'description_row.dart';
 
 class MovieDescription extends StatelessWidget {
@@ -31,9 +31,8 @@ class MovieDescription extends StatelessWidget {
                 ),
                 DescriptionRow(
                   title: "Genres:",
-                  description: movieObject != null &&
-                          movieObject.genreIds != null
-                      ? getGenreNamesFromIdList(movieObject.genreIds).join(', ')
+                  description: movieObject != null && movieObject.genres != null
+                      ? genresString
                       : '',
                 ),
                 DescriptionRow(
