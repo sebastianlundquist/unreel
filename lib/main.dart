@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: Color(0xFF131C25),
-        accentColor: Color(0xFF38CCAC),
+        accentColor: Colors.amber,
         scaffoldBackgroundColor: Color(0xFF131C25),
         textTheme: Typography.whiteMountainView.copyWith(
             display1:
