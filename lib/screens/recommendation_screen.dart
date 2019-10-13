@@ -39,6 +39,20 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  void init() async {
+    discoveryListData = await Movies().getMovies(
+        minReleaseDate, maxReleaseDate, minVoteCount, minVoteAverage, page);
+    movieList.clear();
+    for (var movie in discoveryListData['results']) movieList.add(movie['id']);
+    preloadNextMovie();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
@@ -49,21 +63,14 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
           padding: const EdgeInsets.all(16.0),
           child: FloatingActionButton(
             onPressed: () async {
-              if (movieIndex == 0 && page == 1) {
-                discoveryListData = await Movies().getMovies(minReleaseDate,
-                    maxReleaseDate, minVoteCount, minVoteAverage, page);
-                movieList.clear();
-                for (var movie in discoveryListData['results'])
-                  movieList.add(movie['id']);
-                actualMovie =
-                    await Movies().getMovieDetails(movieList[movieIndex]);
+              if (movieIndex != resultsPerPage - 1) {
                 setState(() {
+                  actualMovie = nextMovie;
                   backdropImage = NetworkImage(
                       '$imageURL$backdropSize${actualMovie.backdropPath}');
                 });
                 movieIndex++;
-                preloadNextMovie();
-              } else if (movieIndex == resultsPerPage - 1) {
+              } else {
                 setState(() {
                   actualMovie = nextMovie;
                   backdropImage = NetworkImage(
@@ -76,16 +83,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                 movieList.clear();
                 for (var movie in discoveryListData['results'])
                   movieList.add(movie['id']);
-                preloadNextMovie();
-              } else {
-                setState(() {
-                  actualMovie = nextMovie;
-                  backdropImage = NetworkImage(
-                      '$imageURL$backdropSize${actualMovie.backdropPath}');
-                });
-                movieIndex++;
-                preloadNextMovie();
               }
+              preloadNextMovie();
             },
             child: Icon(Icons.refresh),
           ),
