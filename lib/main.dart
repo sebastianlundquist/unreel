@@ -8,11 +8,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          brightness: Brightness.dark,
-          primaryColor: Color(0xFF131C25),
-          accentColor: Color(0xFF38CCAC),
-          scaffoldBackgroundColor: Color(0xFF131C25),
-          textTheme: Typography.whiteMountainView),
+        brightness: Brightness.dark,
+        primaryColor: Color(0xFF131C25),
+        accentColor: Color(0xFF38CCAC),
+        scaffoldBackgroundColor: Color(0xFF131C25),
+        textTheme: Typography.whiteMountainView.copyWith(
+            display1:
+                Theme.of(context).textTheme.display1.apply(color: Colors.white),
+            subtitle: Theme.of(context).textTheme.subtitle.apply(
+                  color: Color(0xAAFFFFFF),
+                )),
+      ),
       home: NavigationScreen(),
     );
   }

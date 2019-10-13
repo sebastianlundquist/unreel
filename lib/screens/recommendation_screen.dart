@@ -201,7 +201,12 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                     Row(
                       children: <Widget>[
                         Expanded(
-                          child: Text('Original Title:'),
+                          child: Text(
+                            'Original Title:',
+                            style: TextStyle(
+                              color: Color(0xAAFFFFFF),
+                            ),
+                          ),
                         ),
                         Expanded(
                           child: Text(movieObject != null
@@ -214,7 +219,12 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                     Row(
                       children: <Widget>[
                         Expanded(
-                          child: Text('Genres:'),
+                          child: Text(
+                            'Genres:',
+                            style: TextStyle(
+                              color: Color(0xAAFFFFFF),
+                            ),
+                          ),
                         ),
                         Expanded(
                           child: Text(movieObject != null &&
@@ -229,7 +239,12 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                     Row(
                       children: <Widget>[
                         Expanded(
-                          child: Text('Release Date:'),
+                          child: Text(
+                            'Release Date:',
+                            style: TextStyle(
+                              color: Color(0xAAFFFFFF),
+                            ),
+                          ),
                         ),
                         Expanded(
                           child: Text(movieObject != null
@@ -242,7 +257,12 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                     Row(
                       children: <Widget>[
                         Expanded(
-                          child: Text('Original Language:'),
+                          child: Text(
+                            'Original Language:',
+                            style: TextStyle(
+                              color: Color(0xAAFFFFFF),
+                            ),
+                          ),
                         ),
                         Expanded(
                           child: Text(movieObject != null
