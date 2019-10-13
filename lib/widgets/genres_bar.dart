@@ -43,13 +43,33 @@ class _GenresBarState extends State<GenresBar> {
     return list;
   }
 
+  String minutesToComposite(int minutes) {
+    int hours = (minutes / 60).floor();
+    int min = minutes % 60;
+    return '${hours}h ${min}m';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 4.0, 0.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          Row(
+            children: <Widget>[
+              Icon(
+                Icons.access_time,
+                color: Colors.amber,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  minutesToComposite(widget.movieObject.runtime),
+                ),
+              ),
+            ],
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: genreWidgets(
