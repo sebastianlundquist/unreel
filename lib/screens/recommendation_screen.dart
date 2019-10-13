@@ -45,11 +45,14 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   }
 
   void init() async {
-    discoveryListData = await Movies().getMovies(
-        minReleaseDate, maxReleaseDate, minVoteCount, minVoteAverage, page);
-    movieList.clear();
-    for (var movie in discoveryListData['results']) movieList.add(movie['id']);
-    preloadNextMovie();
+    if (discoveryListData == null) {
+      discoveryListData = await Movies().getMovies(
+          minReleaseDate, maxReleaseDate, minVoteCount, minVoteAverage, page);
+      movieList.clear();
+      for (var movie in discoveryListData['results'])
+        movieList.add(movie['id']);
+      preloadNextMovie();
+    }
   }
 
   @override
