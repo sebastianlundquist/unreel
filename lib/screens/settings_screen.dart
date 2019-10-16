@@ -12,7 +12,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
   RangeValues _rangeValues = RangeValues(1940, DateTime.now().year.toDouble());
   String _genreValue = 'Action';
   List<String> vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
-  String watchText = 'I want to watch a';
+  String watchText = 'a';
+
+  @override
+  void initState() {
+    for (String vowel in vowels) {
+      if (_genreValue.toLowerCase().startsWith(vowel)) {
+        setState(() {
+          watchText = 'an';
+        });
+        break;
+      } else {
+        watchText = 'a';
+      }
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              watchText,
+              'I want to watch',
               style: Theme.of(context)
                   .textTheme
                   .display1
@@ -34,6 +49,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      watchText,
+                      style: Theme.of(context)
+                          .textTheme
+                          .body1
+                          .copyWith(fontStyle: FontStyle.italic),
+                    ),
+                  ),
                   DropdownButton<String>(
                       value: _genreValue,
                       iconEnabledColor: Colors.amber,
@@ -43,11 +68,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           for (String vowel in vowels) {
                             if (_genreValue.toLowerCase().startsWith(vowel)) {
                               setState(() {
-                                watchText = 'I want to watch an';
+                                watchText = 'an';
                               });
                               break;
                             } else {
-                              watchText = 'I want to watch a';
+                              watchText = 'a';
                             }
                           }
                         });
@@ -116,7 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             setState(() => _voteAverageValue = newRating);
                           },
                           value: _voteAverageValue,
-                          divisions: 10,
+                          divisions: 20,
                         ),
                       ),
                     ],
@@ -182,21 +207,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
                     children: <Widget>[
                       Text(
-                        'released between the years of',
+                        'between',
                         style: Theme.of(context)
                             .textTheme
                             .body1
                             .copyWith(fontStyle: FontStyle.italic),
                       ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
@@ -212,11 +232,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             .copyWith(fontStyle: FontStyle.italic),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                         child: Text(
                           _rangeValues.end.toInt().toString(),
                           style: Theme.of(context).textTheme.display1,
                         ),
+                      ),
+                      Text(
+                        '.',
+                        style: Theme.of(context)
+                            .textTheme
+                            .body1
+                            .copyWith(fontStyle: FontStyle.italic),
                       ),
                     ],
                   ),
