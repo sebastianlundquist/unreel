@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/models/movie.dart';
+import 'package:movie_app/models/settings.dart';
 import 'package:movie_app/services/movies.dart';
 import 'package:movie_app/models/movie_light.dart';
 import 'package:movie_app/widgets/genres_bar.dart';
 import 'package:movie_app/widgets/movie_description.dart';
 import 'package:movie_app/models/shawshank.dart';
 import 'package:movie_app/widgets/title_display.dart';
+import 'package:provider/provider.dart';
 
 const imageURL = 'https://image.tmdb.org/t/p';
 const backdropSize = '/w780';
@@ -25,11 +27,6 @@ class RecommendationScreen extends StatefulWidget {
 }
 
 class _RecommendationScreenState extends State<RecommendationScreen> {
-  DateTime minReleaseDate = DateTime(2000, 1, 1);
-  DateTime maxReleaseDate = DateTime(2010, 12, 31);
-  int minVoteCount = 100;
-  double minVoteAverage = 7.0;
-
   void preloadNextMovie() async {
     precacheImage(
         NetworkImage(
@@ -38,16 +35,18 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     nextMovie = await Movies().getMovieDetails(movieList[movieIndex]);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    init();
-  }
-
   void init() async {
     if (discoveryListData == null) {
+      discoveryListData = 0;
       discoveryListData = await Movies().getMovies(
-          minReleaseDate, maxReleaseDate, minVoteCount, minVoteAverage, page);
+          Provider.of<Settings>(context).genre,
+          Provider.of<Settings>(context).minRating,
+          Provider.of<Settings>(context).minVotes,
+          DateTime.utc(
+              Provider.of<Settings>(context).yearSpan.start.toInt(), 1, 1),
+          DateTime.utc(
+              Provider.of<Settings>(context).yearSpan.end.toInt(), 12, 31),
+          page);
       movieList.clear();
       for (var movie in discoveryListData['results'])
         movieList.add(movie['id']);
@@ -57,6 +56,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    init();
     return Column(
       children: <Widget>[
         TitleDisplay(backdropImage: backdropImage, movieObject: actualMovie),
@@ -81,8 +81,19 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                 });
                 movieIndex = 0;
                 page++;
-                discoveryListData = await Movies().getMovies(minReleaseDate,
-                    maxReleaseDate, minVoteCount, minVoteAverage, page);
+                discoveryListData = await Movies().getMovies(
+                    Provider.of<Settings>(context).genre,
+                    Provider.of<Settings>(context).minRating,
+                    Provider.of<Settings>(context).minVotes,
+                    DateTime.utc(
+                        Provider.of<Settings>(context).yearSpan.start.toInt(),
+                        1,
+                        1),
+                    DateTime.utc(
+                        Provider.of<Settings>(context).yearSpan.end.toInt(),
+                        12,
+                        31),
+                    page);
                 movieList.clear();
                 for (var movie in discoveryListData['results'])
                   movieList.add(movie['id']);
