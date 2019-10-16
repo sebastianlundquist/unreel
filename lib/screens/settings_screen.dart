@@ -11,6 +11,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _minimumVotes = 0;
   RangeValues _rangeValues = RangeValues(1940, DateTime.now().year.toDouble());
   String _genreValue = 'Action';
+  List<String> vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
+  String watchText = 'I want to watch a';
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'I want to watch a',
+              watchText,
               style: Theme.of(context)
                   .textTheme
                   .display1
@@ -36,7 +38,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       value: _genreValue,
                       iconEnabledColor: Colors.amber,
                       onChanged: (newValue) {
-                        setState(() => _genreValue = newValue);
+                        setState(() {
+                          _genreValue = newValue;
+                          for (String vowel in vowels) {
+                            if (_genreValue.toLowerCase().startsWith(vowel)) {
+                              setState(() {
+                                watchText = 'I want to watch an';
+                              });
+                              break;
+                            } else {
+                              watchText = 'I want to watch a';
+                            }
+                          }
+                        });
                       },
                       items: genreNames
                           .map<DropdownMenuItem<String>>((String value) {
