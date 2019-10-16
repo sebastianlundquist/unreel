@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/models/genres.dart';
+import 'package:movie_app/models/settings.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -7,17 +9,16 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  double _voteAverageValue = 5.0;
-  int _minimumVotes = 0;
-  RangeValues _rangeValues = RangeValues(1940, DateTime.now().year.toDouble());
-  String _genreValue = 'Action';
   List<String> vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
   String watchText = 'a';
 
   @override
-  void initState() {
+  Widget build(BuildContext context) {
     for (String vowel in vowels) {
-      if (_genreValue.toLowerCase().startsWith(vowel)) {
+      if (Provider.of<Settings>(context)
+          .genreName
+          .toLowerCase()
+          .startsWith(vowel)) {
         setState(() {
           watchText = 'an';
         });
@@ -26,11 +27,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         watchText = 'a';
       }
     }
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -60,22 +56,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   DropdownButton<String>(
-                      value: _genreValue,
+                      value: Provider.of<Settings>(context).genreName,
                       iconEnabledColor: Colors.amber,
                       onChanged: (newValue) {
-                        setState(() {
-                          _genreValue = newValue;
-                          for (String vowel in vowels) {
-                            if (_genreValue.toLowerCase().startsWith(vowel)) {
-                              setState(() {
-                                watchText = 'an';
-                              });
-                              break;
-                            } else {
-                              watchText = 'a';
-                            }
-                          }
-                        });
+                        Provider.of<Settings>(context).changeGenre(newValue);
                       },
                       items: genreNames
                           .map<DropdownMenuItem<String>>((String value) {
@@ -116,7 +100,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          _voteAverageValue.toString(),
+                          Provider.of<Settings>(context).minRating.toString(),
                           style: Theme.of(context).textTheme.display1,
                         ),
                       ),
@@ -138,9 +122,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           min: 0.0,
                           max: 10.0,
                           onChanged: (newRating) {
-                            setState(() => _voteAverageValue = newRating);
+                            Provider.of<Settings>(context)
+                                .changeMinRating(newRating);
                           },
-                          value: _voteAverageValue,
+                          value: Provider.of<Settings>(context).minRating,
                           divisions: 20,
                         ),
                       ),
@@ -168,7 +153,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          _minimumVotes.toString(),
+                          Provider.of<Settings>(context).minVotes.toString(),
                           style: Theme.of(context).textTheme.display1,
                         ),
                       ),
@@ -190,9 +175,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           min: 0,
                           max: 10000,
                           onChanged: (newVotes) {
-                            setState(() => _minimumVotes = newVotes.toInt());
+                            Provider.of<Settings>(context)
+                                .changeMinVotes(newVotes.toInt());
                           },
-                          value: _minimumVotes.toDouble(),
+                          value: Provider.of<Settings>(context)
+                              .minVotes
+                              .toDouble(),
                           divisions: 10,
                         ),
                       ),
@@ -220,7 +208,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          _rangeValues.start.toInt().toString(),
+                          Provider.of<Settings>(context)
+                              .yearSpan
+                              .start
+                              .toInt()
+                              .toString(),
                           style: Theme.of(context).textTheme.display1,
                         ),
                       ),
@@ -234,7 +226,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                         child: Text(
-                          _rangeValues.end.toInt().toString(),
+                          Provider.of<Settings>(context)
+                              .yearSpan
+                              .end
+                              .toInt()
+                              .toString(),
                           style: Theme.of(context).textTheme.display1,
                         ),
                       ),
@@ -256,9 +252,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           min: DateTime.now().year.toDouble() - 100,
                           max: DateTime.now().year.toDouble(),
                           onChanged: (RangeValues values) {
-                            setState(() => _rangeValues = values);
+                            Provider.of<Settings>(context)
+                                .changeYearSpan(values);
                           },
-                          values: _rangeValues,
+                          values: Provider.of<Settings>(context).yearSpan,
                           divisions: 100,
                         ),
                       ),
