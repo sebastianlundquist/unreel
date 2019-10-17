@@ -38,8 +38,12 @@ class _GenresBarState extends State<GenresBar> {
   }
 
   String minutesToComposite(int minutes) {
-    int hours = (minutes / 60).floor();
-    int min = minutes % 60;
+    int hours = 0;
+    int min = 0;
+    if (minutes != null) {
+      hours = (minutes / 60).floor();
+      min = minutes % 60;
+    }
     return '${hours}h ${min}m';
   }
 
