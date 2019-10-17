@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/models/settings.dart';
 import 'package:provider/provider.dart';
 
+import 'recommendation_screen.dart';
+
+List<String> genreNames;
+
 class SettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -70,6 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       iconEnabledColor: Colors.amber,
                       onChanged: (newValue) {
                         Provider.of<Settings>(context).changeGenre(newValue);
+                        resetMovies();
                       },
                       items: genreNames
                           .map<DropdownMenuItem<String>>((String value) {
@@ -135,6 +140,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             Provider.of<Settings>(context)
                                 .changeMinRating(newRating);
                           },
+                          onChangeEnd: (newRating) {
+                            resetMovies();
+                          },
                           value: Provider.of<Settings>(context).minRating,
                           divisions: 20,
                         ),
@@ -187,6 +195,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           onChanged: (newVotes) {
                             Provider.of<Settings>(context)
                                 .changeMinVotes(newVotes.toInt());
+                          },
+                          onChangeEnd: (newVotes) {
+                            resetMovies();
                           },
                           value: Provider.of<Settings>(context)
                               .minVotes
@@ -264,6 +275,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           onChanged: (RangeValues values) {
                             Provider.of<Settings>(context)
                                 .changeYearSpan(values);
+                          },
+                          onChangeEnd: (values) {
+                            resetMovies();
                           },
                           values: Provider.of<Settings>(context).yearSpan,
                           divisions: 100,

@@ -20,6 +20,12 @@ int page = 1;
 int resultsPerPage = 20;
 var movieList = new List<int>();
 
+void resetMovies() {
+  movieIndex = 0;
+  page = 1;
+  discoveryListData = null;
+}
+
 class RecommendationScreen extends StatefulWidget {
   @override
   _RecommendationScreenState createState() => _RecommendationScreenState();
