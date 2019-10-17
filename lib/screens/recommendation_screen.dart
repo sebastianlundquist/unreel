@@ -82,7 +82,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                 movieIndex = 0;
                 page++;
                 discoveryListData = await Movies().getMovies(
-                    Provider.of<Settings>(context).genre,
+                    Provider.of<Settings>(context).genre['id'],
                     Provider.of<Settings>(context).minRating,
                     Provider.of<Settings>(context).minVotes,
                     DateTime.utc(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/settings.dart';
 import 'package:provider/provider.dart';
 
@@ -14,9 +13,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    genreNames = [];
+    for (int i = 0; i < genres.length; i++) {
+      genreNames.add(genres[i]['name']);
+    }
     for (String vowel in vowels) {
-      if (Provider.of<Settings>(context)
-          .genreName
+      if (Provider.of<Settings>(context).genre['name'] == 'Any') {
+        setState(() {
+          watchText = '';
+        });
+        break;
+      } else if (Provider.of<Settings>(context)
+          .genre['name']
           .toLowerCase()
           .startsWith(vowel)) {
         setState(() {
@@ -24,7 +32,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         });
         break;
       } else {
-        watchText = 'a';
+        setState(() {
+          watchText = 'a';
+        });
       }
     }
     return SafeArea(
@@ -56,7 +66,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   DropdownButton<String>(
-                      value: Provider.of<Settings>(context).genreName,
+                      value: Provider.of<Settings>(context).genre['name'],
                       iconEnabledColor: Colors.amber,
                       onChanged: (newValue) {
                         Provider.of<Settings>(context).changeGenre(newValue);

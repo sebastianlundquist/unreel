@@ -1,41 +1,45 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+const List<Map<String, dynamic>> genres = [
+  {'id': -1, 'name': 'Any'},
+  {'id': 28, 'name': 'Action'},
+  {'id': 12, 'name': 'Adventure'},
+  {'id': 16, 'name': 'Animation'},
+  {'id': 35, 'name': 'Comedy'},
+  {'id': 80, 'name': 'Crime'},
+  {'id': 99, 'name': 'Documentary'},
+  {'id': 18, 'name': 'Drama'},
+  {'id': 10751, 'name': 'Family'},
+  {'id': 14, 'name': 'Fantasy'},
+  {'id': 36, 'name': 'History'},
+  {'id': 27, 'name': 'Horror'},
+  {'id': 10402, 'name': 'Music'},
+  {'id': 9648, 'name': 'Mystery'},
+  {'id': 10749, 'name': 'Romance'},
+  {'id': 878, 'name': 'Science Fiction'},
+  {'id': 10770, 'name': 'TV Movie'},
+  {'id': 53, 'name': 'Thriller'},
+  {'id': 10752, 'name': 'War'},
+  {'id': 37, 'name': 'Western'}
+];
+
 class Settings extends ChangeNotifier {
   Settings();
-  int genre = 28;
-  String genreName = 'Action';
   double minRating = 4.0;
   int minVotes = 0;
   RangeValues yearSpan = RangeValues(
       DateTime.now().year.toDouble() - 100, DateTime.now().year.toDouble());
 
-  static const Map<int, String> genres = {
-    28: 'Action',
-    12: 'Adventure',
-    16: 'Animation',
-    35: 'Comedy',
-    80: 'Crime',
-    99: 'Documentary',
-    18: 'Drama',
-    10751: 'Family',
-    14: 'Fantasy',
-    36: 'History',
-    27: 'Horror',
-    10402: 'Music',
-    9648: 'Mystery',
-    10749: 'Romance',
-    878: 'Science Fiction',
-    10770: 'TV Movie',
-    53: 'Thriller',
-    10752: 'War',
-    37: 'Western'
-  };
+  Map<String, dynamic> genre = genres[0];
 
   void changeGenre(String newGenre) {
-    genre = genres.keys
-        .firstWhere((k) => genres[k] == newGenre, orElse: () => null);
-    genreName = newGenre;
+    for (var g in genres) {
+      if (g['name'] == newGenre) {
+        genre = g;
+        break;
+      }
+    }
     notifyListeners();
   }
 

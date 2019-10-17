@@ -9,6 +9,9 @@ class Movies {
       DateTime minReleaseDate, DateTime maxReleaseDate, int page) async {
     String completeURL =
         '$url/discover/movie?api_key=$apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=$page&with_genres=$genre&vote_average.gte=$minRating&vote_count.gte=$minVotes&primary_release_date.gte=${minReleaseDate.toIso8601String()}&primary_release_date.lte=${maxReleaseDate.toIso8601String()}';
+    if (genre == -1)
+      completeURL =
+          '$url/discover/movie?api_key=$apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=$page&vote_average.gte=$minRating&vote_count.gte=$minVotes&primary_release_date.gte=${minReleaseDate.toIso8601String()}&primary_release_date.lte=${maxReleaseDate.toIso8601String()}';
     NetworkHelper networkHelper = NetworkHelper(completeURL);
     print(completeURL);
     var movieData = await networkHelper.getData();
