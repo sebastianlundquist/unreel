@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/models/settings.dart';
 import 'package:movie_app/services/movies.dart';
-import 'package:movie_app/models/movie_light.dart';
 import 'package:movie_app/widgets/genres_bar.dart';
 import 'package:movie_app/widgets/movie_description.dart';
 import 'package:movie_app/models/shawshank.dart';
@@ -30,7 +29,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   void preloadNextMovie() async {
     precacheImage(
         NetworkImage(
-            '$imageURL$backdropSize${MovieLight.fromJson(discoveryListData['results'][movieIndex]).backdropPath}'),
+            '$imageURL$backdropSize${Movie.fromJson(discoveryListData['results'][movieIndex]).backdropPath}'),
         context);
     nextMovie = await Movies().getMovieDetails(movieList[movieIndex]);
   }
