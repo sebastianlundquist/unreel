@@ -1,15 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/models/languages.dart';
 import 'package:movie_app/models/movie.dart';
-import 'package:movie_app/widgets/genres_bar.dart';
 import 'package:intl/intl.dart';
 import 'description_row.dart';
+
+List<String> genres;
+List<String> productionCountries;
+List<String> productionCompanies;
 
 class MovieDescription extends StatelessWidget {
   MovieDescription({@required this.movieObject});
   final Movie movieObject;
   @override
   Widget build(BuildContext context) {
+    genres = [];
+    productionCountries = [];
+    productionCompanies = [];
+    if (movieObject != null) {
+      for (int i = 0; i < movieObject.genres.length; i++) {
+        genres.add(movieObject.genres[i]['name']);
+      }
+      for (int i = 0; i < movieObject.productionCountries.length; i++) {
+        productionCountries.add(movieObject.productionCountries[i]['name']);
+      }
+      for (int i = 0; i < movieObject.productionCompanies.length; i++) {
+        productionCompanies.add(movieObject.productionCompanies[i]['name']);
+      }
+    }
     return Expanded(
       child: ListView(
         padding: EdgeInsets.all(0.0),
@@ -43,9 +60,7 @@ class MovieDescription extends StatelessWidget {
                 ),
                 DescriptionRow(
                   title: "Genres:",
-                  description: movieObject != null && movieObject.genres != null
-                      ? genresString
-                      : '',
+                  description: genres.join(', '),
                 ),
                 DescriptionRow(
                   title: "Premiere:",
@@ -59,6 +74,14 @@ class MovieDescription extends StatelessWidget {
                   description: movieObject != null
                       ? findLanguage(movieObject.originalLanguage)
                       : '',
+                ),
+                DescriptionRow(
+                  title: "Production:",
+                  description: productionCompanies.join(', '),
+                ),
+                DescriptionRow(
+                  title: "Locations:",
+                  description: productionCountries.join(', '),
                 ),
               ],
             ),
