@@ -7,21 +7,24 @@ class DescriptionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Text(
-            title,
-            style: TextStyle(
-              color: Color(0xAAFFFFFF),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                color: Color(0xAAFFFFFF),
+              ),
             ),
           ),
-        ),
-        Expanded(
-          child: Text(description),
-          flex: 2,
-        ),
-      ],
+          Expanded(
+            child: Text(description),
+            flex: 2,
+          ),
+        ],
+      ),
     );
   }
 }

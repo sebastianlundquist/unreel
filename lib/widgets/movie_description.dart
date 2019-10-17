@@ -32,7 +32,8 @@ class MovieDescription extends StatelessWidget {
         padding: EdgeInsets.all(0.0),
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 16.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Text(
               movieObject != null ? movieObject.tagline : '',
               style: Theme.of(context)
@@ -43,14 +44,16 @@ class MovieDescription extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Text(
               movieObject != null ? movieObject.overview : '',
               style: Theme.of(context).textTheme.body1,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Column(
               children: <Widget>[
                 DescriptionRow(
