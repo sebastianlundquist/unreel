@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/models/languages.dart';
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/widgets/genres_bar.dart';
+import 'package:intl/intl.dart';
 import 'description_row.dart';
 
 class MovieDescription extends StatelessWidget {
@@ -47,9 +48,10 @@ class MovieDescription extends StatelessWidget {
                       : '',
                 ),
                 DescriptionRow(
-                  title: "Release Date:",
+                  title: "Premiere:",
                   description: movieObject != null
-                      ? movieObject.releaseDate.toString()
+                      ? DateFormat.yMMMMd()
+                          .format(DateTime.parse(movieObject.releaseDate))
                       : '',
                 ),
                 DescriptionRow(
