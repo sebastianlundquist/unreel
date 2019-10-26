@@ -64,7 +64,7 @@ class Movie {
         originalLanguage = json['original_language'],
         originalTitle = json['original_title'],
         overview = json['overview'],
-        popularity = json['popularity'],
+        popularity = json['popularity'].toDouble(),
         posterPath = json['poster_path'],
         productionCompanies = json['production_companies'],
         productionCountries = json['production_countries'],
@@ -76,7 +76,7 @@ class Movie {
         tagline = json['tagline'],
         title = json['title'],
         video = json['video'],
-        voteAverage = json['vote_average'],
+        voteAverage = json['vote_average'].toDouble(),
         voteCount = json['vote_count'];
 
   Map<String, dynamic> toJson() => {
