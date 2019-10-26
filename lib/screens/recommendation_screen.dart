@@ -42,17 +42,15 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     nextMovie = await Movies().getMovieDetails(movieList[movieIndex]);
   }
 
-  void init() async {
+  void init(Settings settings) async {
     if (discoveryListData == null) {
       discoveryListData = 0;
       discoveryListData = await Movies().getMovies(
-          Provider.of<Settings>(context).genre['id'],
-          Provider.of<Settings>(context).minRating,
-          Provider.of<Settings>(context).minVotes,
-          DateTime.utc(
-              Provider.of<Settings>(context).yearSpan.start.toInt(), 1, 1),
-          DateTime.utc(
-              Provider.of<Settings>(context).yearSpan.end.toInt(), 12, 31),
+          settings.genre['id'],
+          settings.minRating,
+          settings.minVotes,
+          DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
+          DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
           page);
       movieList.clear();
       if (discoveryListData == null) {
@@ -73,7 +71,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     }
   }
 
-  void goToNextMovie() async {
+  void goToNextMovie(Settings settings) async {
     if (movieIndex != resultsPerPage - 1) {
       setState(() {
         actualMovie = nextMovie;
@@ -90,13 +88,11 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
       movieIndex = 0;
       page++;
       discoveryListData = await Movies().getMovies(
-          Provider.of<Settings>(context).genre['id'],
-          Provider.of<Settings>(context).minRating,
-          Provider.of<Settings>(context).minVotes,
-          DateTime.utc(
-              Provider.of<Settings>(context).yearSpan.start.toInt(), 1, 1),
-          DateTime.utc(
-              Provider.of<Settings>(context).yearSpan.end.toInt(), 12, 31),
+          settings.genre['id'],
+          settings.minRating,
+          settings.minVotes,
+          DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
+          DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
           page);
       movieList.clear();
       if (discoveryListData == null) {
@@ -115,7 +111,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    init();
+    init(Provider.of<Settings>(context));
     return Column(
       children: <Widget>[
         TitleDisplay(backdropImage: backdropImage, movieObject: actualMovie),
@@ -125,7 +121,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
           padding: const EdgeInsets.all(16.0),
           child: FloatingActionButton(
             onPressed: () {
-              goToNextMovie();
+              goToNextMovie(Provider.of<Settings>(context));
             },
             child: Icon(Icons.refresh),
           ),
