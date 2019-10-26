@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:movie_app/screens/navigation_screen.dart';
 import 'package:provider/provider.dart';
 
+import 'models/movie_data.dart';
 import 'models/settings.dart';
 
 void main() => runApp(MyApp());
@@ -14,8 +15,15 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return ChangeNotifierProvider(
-      builder: (context) => Settings(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          builder: (context) => Settings(),
+        ),
+        ChangeNotifierProvider(
+          builder: (context) => MovieData(),
+        ),
+      ],
       child: MaterialApp(
         theme: ThemeData(
           brightness: Brightness.dark,

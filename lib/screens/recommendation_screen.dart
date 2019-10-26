@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/models/movie.dart';
+import 'package:movie_app/models/movie_data.dart';
 import 'package:movie_app/models/settings.dart';
 import 'package:movie_app/services/movies.dart';
 import 'package:movie_app/widgets/genres_bar.dart';
@@ -11,21 +12,15 @@ import 'package:provider/provider.dart';
 const imageURL = 'https://image.tmdb.org/t/p';
 const backdropSize = '/w780';
 
-Movie actualMovie = Movie.fromJson(shawshank);
-Movie nextMovie = Movie.fromJson(shawshank);
-ImageProvider backdropImage = AssetImage('images/shawshank_backdrop.jpg');
-dynamic discoveryListData;
-int movieIndex = 0;
-int page = 1;
 int resultsPerPage = 20;
-var movieList = new List<int>();
 
-void resetMovies() {
-  movieIndex = 0;
-  page = 1;
-  discoveryListData = null;
-  actualMovie = Movie.fromJson(shawshank);
-  nextMovie = Movie.fromJson(shawshank);
+void resetMovies(MovieData movieData) {
+  print("reset movies");
+  movieData.movieIndex = 0;
+  movieData.page = 1;
+  movieData.discoveryListData = null;
+  movieData.currentMovie = Movie.fromJson(shawshank);
+  movieData.nextMovie = Movie.fromJson(shawshank);
 }
 
 class RecommendationScreen extends StatefulWidget {
@@ -35,75 +30,91 @@ class RecommendationScreen extends StatefulWidget {
 
 class _RecommendationScreenState extends State<RecommendationScreen> {
   void preloadNextMovie() async {
-    precacheImage(
-        NetworkImage(
-            '$imageURL$backdropSize${Movie.fromJson(discoveryListData['results'][movieIndex]).backdropPath}'),
-        context);
-    nextMovie = await Movies().getMovieDetails(movieList[movieIndex]);
+    var movieData = Provider.of<MovieData>(context);
+    if (movieData.discoveryListData != null) {
+      precacheImage(
+          NetworkImage(
+              '$imageURL$backdropSize${Movie.fromJson(movieData.discoveryListData['results'][movieData.movieIndex]).backdropPath}'),
+          context);
+    }
+    movieData.changeNextMovie(await Movies()
+        .getMovieDetails(movieData.movieList[movieData.movieIndex]));
   }
 
-  void init(Settings settings) async {
-    if (discoveryListData == null) {
-      discoveryListData = 0;
-      discoveryListData = await Movies().getMovies(
+  void init() async {
+    print("init");
+    var settings = Provider.of<Settings>(context);
+    var movieData = Provider.of<MovieData>(context);
+    if (movieData.discoveryListData == null) {
+      print("listData is null");
+      movieData.discoveryListData = 0;
+      movieData.discoveryListData = await Movies().getMovies(
           settings.genre['id'],
           settings.minRating,
           settings.minVotes,
           DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
           DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
-          page);
-      movieList.clear();
-      if (discoveryListData == null) {
-        print(discoveryListData.toString());
-        actualMovie = Movie.fromJson(shawshank);
-        backdropImage = AssetImage('images/shawshank_backdrop.jpg');
+          movieData.page);
+      /*
+      movieData.changeDiscoveryListData(0);
+      movieData.changeDiscoveryListData(await Movies().getMovies(
+          settings.genre['id'],
+          settings.minRating,
+          settings.minVotes,
+          DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
+          DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
+          movieData.page));
+
+       */
+      movieData.movieList.clear();
+      if (movieData.discoveryListData == null) {
+        /*
+        movieData.changeCurrentMovie(Movie.fromJson(shawshank));
+        movieData
+            .changeBackdropImage(AssetImage('images/shawshank_backdrop.jpg'));
+
+         */
         Scaffold.of(context).showSnackBar(
           SnackBar(
             content: Text('No movies found! :('),
           ),
         );
       } else {
-        print(discoveryListData.toString());
-        for (var movie in discoveryListData['results'])
-          movieList.add(movie['id']);
+        for (var movie in movieData.discoveryListData['results'])
+          movieData.movieList.add(movie['id']);
         preloadNextMovie();
       }
     }
   }
 
-  void goToNextMovie(Settings settings) async {
-    if (movieIndex != resultsPerPage - 1) {
-      setState(() {
-        actualMovie = nextMovie;
-        backdropImage =
-            NetworkImage('$imageURL$backdropSize${actualMovie.backdropPath}');
-      });
-      movieIndex++;
+  void goToNextMovie() async {
+    var settings = Provider.of<Settings>(context);
+    var movieData = Provider.of<MovieData>(context);
+    movieData.changeCurrentMovie(movieData.nextMovie);
+    movieData.changeBackdropImage(NetworkImage(
+        '$imageURL$backdropSize${movieData.currentMovie.backdropPath}'));
+    if (movieData.movieIndex != resultsPerPage - 1) {
+      movieData.changeMovieIndex(movieData.movieIndex + 1);
     } else {
-      setState(() {
-        actualMovie = nextMovie;
-        backdropImage =
-            NetworkImage('$imageURL$backdropSize${actualMovie.backdropPath}');
-      });
-      movieIndex = 0;
-      page++;
-      discoveryListData = await Movies().getMovies(
+      movieData.changeMovieIndex(0);
+      movieData.changePage(movieData.page + 1);
+      movieData.changeDiscoveryListData(await Movies().getMovies(
           settings.genre['id'],
           settings.minRating,
           settings.minVotes,
           DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
           DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
-          page);
-      movieList.clear();
-      if (discoveryListData == null) {
+          movieData.page));
+      movieData.movieList.clear();
+      if (movieData.discoveryListData == null) {
         Scaffold.of(context).showSnackBar(
           SnackBar(
             content: Text('No movies found! :('),
           ),
         );
       } else {
-        for (var movie in discoveryListData['results'])
-          movieList.add(movie['id']);
+        for (var movie in movieData.discoveryListData['results'])
+          movieData.movieList.add(movie['id']);
       }
     }
     preloadNextMovie();
@@ -111,22 +122,26 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    init(Provider.of<Settings>(context));
-    return Column(
-      children: <Widget>[
-        TitleDisplay(backdropImage: backdropImage, movieObject: actualMovie),
-        GenresBar(movieObject: actualMovie),
-        MovieDescription(movieObject: actualMovie),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: FloatingActionButton(
-            onPressed: () {
-              goToNextMovie(Provider.of<Settings>(context));
-            },
-            child: Icon(Icons.refresh),
+    if (Provider.of<MovieData>(context).discoveryListData == null) init();
+    return Consumer<MovieData>(builder: (context, movieData, child) {
+      return Column(
+        children: <Widget>[
+          TitleDisplay(),
+          GenresBar(movieObject: movieData.currentMovie),
+          MovieDescription(movieObject: movieData.currentMovie),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Consumer<Settings>(builder: (context, settings, child) {
+              return FloatingActionButton(
+                onPressed: () {
+                  goToNextMovie();
+                },
+                child: Icon(Icons.refresh),
+              );
+            }),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }

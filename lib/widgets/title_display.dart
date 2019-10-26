@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/movie.dart';
+import 'package:movie_app/models/movie_data.dart';
 import 'package:movie_app/widgets/title_bar.dart';
+import 'package:provider/provider.dart';
 
 class TitleDisplay extends StatelessWidget {
-  TitleDisplay({@required this.backdropImage, @required this.movieObject});
-  final ImageProvider backdropImage;
-  final Movie movieObject;
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.bottomCenter,
       children: <Widget>[
         ShaderMask(
-          child: FadeInImage(
-            placeholder: AssetImage('images/transparent_backdrop.png'),
-            image: backdropImage,
+          child: Consumer<MovieData>(
+            builder: (context, movieData, child) {
+              return FadeInImage(
+                placeholder: AssetImage('images/transparent_backdrop.png'),
+                image: movieData.backdropImage,
+              );
+            },
           ),
           shaderCallback: (Rect bounds) {
             return LinearGradient(
@@ -32,7 +33,7 @@ class TitleDisplay extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: TitleBar(movieObject: movieObject),
+          child: TitleBar(),
         ),
       ],
     );

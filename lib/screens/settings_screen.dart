@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/models/movie_data.dart';
 import 'package:movie_app/models/settings.dart';
 import 'package:movie_app/services/movies.dart';
 import 'package:provider/provider.dart';
@@ -16,25 +17,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
   List<String> vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
   String watchText = 'a';
 
-  void newMovieSearch(Settings settings) async {
-    resetMovies();
-    discoveryListData = await Movies().getMovies(
+  void newMovieSearch() async {
+    var settings = Provider.of<Settings>(context);
+    var movieData = Provider.of<MovieData>(context);
+    resetMovies(movieData);
+    movieData.changeDiscoveryListData(await Movies().getMovies(
         settings.genre['id'],
         settings.minRating,
         settings.minVotes,
         DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
         DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
-        page);
-    movieList.clear();
-    if (discoveryListData == null) {
+        movieData.page));
+    movieData.movieList.clear();
+    if (movieData.discoveryListData == null) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('No movies found! :('),
         ),
       );
     } else {
-      for (var movie in discoveryListData['results'])
-        movieList.add(movie['id']);
+      for (var movie in movieData.discoveryListData['results'])
+        movieData.movieList.add(movie['id']);
     }
   }
 
@@ -99,7 +102,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           iconEnabledColor: Colors.amber,
                           onChanged: (newValue) async {
                             settings.changeGenre(newValue);
-                            newMovieSearch(settings);
+                            newMovieSearch();
                           },
                           items: genreNames
                               .map<DropdownMenuItem<String>>((String value) {
@@ -166,7 +169,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 settings.changeMinRating(newRating);
                               },
                               onChangeEnd: (newRating) {
-                                newMovieSearch(settings);
+                                newMovieSearch();
                               },
                               value: settings.minRating,
                               divisions: 20,
@@ -222,7 +225,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 settings.changeMinVotes(newVotes.toInt());
                               },
                               onChangeEnd: (newVotes) {
-                                newMovieSearch(settings);
+                                newMovieSearch();
                               },
                               value: settings.minVotes.toDouble(),
                               divisions: 10,
@@ -293,7 +296,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 settings.changeYearSpan(values);
                               },
                               onChangeEnd: (values) {
-                                newMovieSearch(settings);
+                                newMovieSearch();
                               },
                               values: settings.yearSpan,
                               divisions: 100,
