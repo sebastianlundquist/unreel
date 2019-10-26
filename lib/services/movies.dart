@@ -15,6 +15,9 @@ class Movies {
     NetworkHelper networkHelper = NetworkHelper(completeURL);
     print(completeURL);
     var movieData = await networkHelper.getData();
+    if (movieData['total_results'] == 0) {
+      return null;
+    }
     return movieData;
   }
 

@@ -24,6 +24,8 @@ void resetMovies() {
   movieIndex = 0;
   page = 1;
   discoveryListData = null;
+  actualMovie = Movie.fromJson(shawshank);
+  nextMovie = Movie.fromJson(shawshank);
 }
 
 class RecommendationScreen extends StatefulWidget {
@@ -44,7 +46,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     if (discoveryListData == null) {
       discoveryListData = 0;
       discoveryListData = await Movies().getMovies(
-          Provider.of<Settings>(context).genre,
+          Provider.of<Settings>(context).genre['id'],
           Provider.of<Settings>(context).minRating,
           Provider.of<Settings>(context).minVotes,
           DateTime.utc(
@@ -53,10 +55,62 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
               Provider.of<Settings>(context).yearSpan.end.toInt(), 12, 31),
           page);
       movieList.clear();
-      for (var movie in discoveryListData['results'])
-        movieList.add(movie['id']);
-      preloadNextMovie();
+      if (discoveryListData == null) {
+        print(discoveryListData.toString());
+        actualMovie = Movie.fromJson(shawshank);
+        backdropImage = AssetImage('images/shawshank_backdrop.jpg');
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No movies found! :('),
+          ),
+        );
+      } else {
+        print(discoveryListData.toString());
+        for (var movie in discoveryListData['results'])
+          movieList.add(movie['id']);
+        preloadNextMovie();
+      }
     }
+  }
+
+  void goToNextMovie() async {
+    if (movieIndex != resultsPerPage - 1) {
+      setState(() {
+        actualMovie = nextMovie;
+        backdropImage =
+            NetworkImage('$imageURL$backdropSize${actualMovie.backdropPath}');
+      });
+      movieIndex++;
+    } else {
+      setState(() {
+        actualMovie = nextMovie;
+        backdropImage =
+            NetworkImage('$imageURL$backdropSize${actualMovie.backdropPath}');
+      });
+      movieIndex = 0;
+      page++;
+      discoveryListData = await Movies().getMovies(
+          Provider.of<Settings>(context).genre['id'],
+          Provider.of<Settings>(context).minRating,
+          Provider.of<Settings>(context).minVotes,
+          DateTime.utc(
+              Provider.of<Settings>(context).yearSpan.start.toInt(), 1, 1),
+          DateTime.utc(
+              Provider.of<Settings>(context).yearSpan.end.toInt(), 12, 31),
+          page);
+      movieList.clear();
+      if (discoveryListData == null) {
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No movies found! :('),
+          ),
+        );
+      } else {
+        for (var movie in discoveryListData['results'])
+          movieList.add(movie['id']);
+      }
+    }
+    preloadNextMovie();
   }
 
   @override
@@ -70,40 +124,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: FloatingActionButton(
-            onPressed: () async {
-              if (movieIndex != resultsPerPage - 1) {
-                setState(() {
-                  actualMovie = nextMovie;
-                  backdropImage = NetworkImage(
-                      '$imageURL$backdropSize${actualMovie.backdropPath}');
-                });
-                movieIndex++;
-              } else {
-                setState(() {
-                  actualMovie = nextMovie;
-                  backdropImage = NetworkImage(
-                      '$imageURL$backdropSize${actualMovie.backdropPath}');
-                });
-                movieIndex = 0;
-                page++;
-                discoveryListData = await Movies().getMovies(
-                    Provider.of<Settings>(context).genre['id'],
-                    Provider.of<Settings>(context).minRating,
-                    Provider.of<Settings>(context).minVotes,
-                    DateTime.utc(
-                        Provider.of<Settings>(context).yearSpan.start.toInt(),
-                        1,
-                        1),
-                    DateTime.utc(
-                        Provider.of<Settings>(context).yearSpan.end.toInt(),
-                        12,
-                        31),
-                    page);
-                movieList.clear();
-                for (var movie in discoveryListData['results'])
-                  movieList.add(movie['id']);
-              }
-              preloadNextMovie();
+            onPressed: () {
+              goToNextMovie();
             },
             child: Icon(Icons.refresh),
           ),
