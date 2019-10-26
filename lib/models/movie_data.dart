@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/models/shawshank.dart';
 import 'movie.dart';
 
+const imageURL = 'https://image.tmdb.org/t/p';
+const backdropSize = '/w780';
+
 class MovieData extends ChangeNotifier {
   MovieData();
   Movie currentMovie = Movie.fromJson(shawshank);
   Movie nextMovie = Movie.fromJson(shawshank);
   ImageProvider backdropImage = AssetImage('images/shawshank_backdrop.jpg');
   dynamic discoveryListData;
-  int movieIndex = 0;
+  int movieIndex = -1;
   int page = 1;
   var movieList = new List<int>();
 

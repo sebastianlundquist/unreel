@@ -5,23 +5,10 @@ import 'package:movie_app/models/settings.dart';
 import 'package:movie_app/services/movies.dart';
 import 'package:movie_app/widgets/genres_bar.dart';
 import 'package:movie_app/widgets/movie_description.dart';
-import 'package:movie_app/models/shawshank.dart';
 import 'package:movie_app/widgets/title_display.dart';
 import 'package:provider/provider.dart';
 
-const imageURL = 'https://image.tmdb.org/t/p';
-const backdropSize = '/w780';
-
 int resultsPerPage = 20;
-
-void resetMovies(MovieData movieData) {
-  print("reset movies");
-  movieData.movieIndex = 0;
-  movieData.page = 1;
-  movieData.discoveryListData = null;
-  movieData.currentMovie = Movie.fromJson(shawshank);
-  movieData.nextMovie = Movie.fromJson(shawshank);
-}
 
 class RecommendationScreen extends StatefulWidget {
   @override
@@ -34,19 +21,17 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     if (movieData.discoveryListData != null) {
       precacheImage(
           NetworkImage(
-              '$imageURL$backdropSize${Movie.fromJson(movieData.discoveryListData['results'][movieData.movieIndex]).backdropPath}'),
+              '$imageURL$backdropSize${Movie.fromJson(movieData.discoveryListData['results'][movieData.movieIndex + 1]).backdropPath}'),
           context);
     }
     movieData.changeNextMovie(await Movies()
-        .getMovieDetails(movieData.movieList[movieData.movieIndex]));
+        .getMovieDetails(movieData.movieList[movieData.movieIndex + 1]));
   }
 
   void init() async {
-    print("init");
     var settings = Provider.of<Settings>(context);
     var movieData = Provider.of<MovieData>(context);
     if (movieData.discoveryListData == null) {
-      print("listData is null");
       movieData.discoveryListData = 0;
       movieData.discoveryListData = await Movies().getMovies(
           settings.genre['id'],
@@ -55,25 +40,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
           DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
           DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
           movieData.page);
-      /*
-      movieData.changeDiscoveryListData(0);
-      movieData.changeDiscoveryListData(await Movies().getMovies(
-          settings.genre['id'],
-          settings.minRating,
-          settings.minVotes,
-          DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
-          DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
-          movieData.page));
-
-       */
       movieData.movieList.clear();
       if (movieData.discoveryListData == null) {
-        /*
-        movieData.changeCurrentMovie(Movie.fromJson(shawshank));
-        movieData
-            .changeBackdropImage(AssetImage('images/shawshank_backdrop.jpg'));
-
-         */
         Scaffold.of(context).showSnackBar(
           SnackBar(
             content: Text('No movies found! :('),
@@ -93,7 +61,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     movieData.changeCurrentMovie(movieData.nextMovie);
     movieData.changeBackdropImage(NetworkImage(
         '$imageURL$backdropSize${movieData.currentMovie.backdropPath}'));
-    if (movieData.movieIndex != resultsPerPage - 1) {
+    if (movieData.movieIndex != resultsPerPage - 2) {
       movieData.changeMovieIndex(movieData.movieIndex + 1);
     } else {
       movieData.changeMovieIndex(0);

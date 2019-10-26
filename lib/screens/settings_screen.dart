@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/models/movie_data.dart';
 import 'package:movie_app/models/settings.dart';
+import 'package:movie_app/models/shawshank.dart';
 import 'package:movie_app/services/movies.dart';
 import 'package:provider/provider.dart';
-
-import 'recommendation_screen.dart';
 
 List<String> genreNames;
 
@@ -20,7 +20,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void newMovieSearch() async {
     var settings = Provider.of<Settings>(context);
     var movieData = Provider.of<MovieData>(context);
-    resetMovies(movieData);
+    movieData.changeMovieIndex(0);
+    movieData.changePage(1);
+    movieData.discoveryListData = null;
+    movieData.changeCurrentMovie(Movie.fromJson(shawshank));
+    movieData.changeNextMovie(Movie.fromJson(shawshank));
     movieData.changeDiscoveryListData(await Movies().getMovies(
         settings.genre['id'],
         settings.minRating,
@@ -38,11 +42,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } else {
       for (var movie in movieData.discoveryListData['results'])
         movieData.movieList.add(movie['id']);
+      if (movieData.discoveryListData['results'].length > 0) {
+        movieData.changeCurrentMovie(await Movies()
+            .getMovieDetails(movieData.movieList[movieData.movieIndex]));
+        movieData.changeBackdropImage(NetworkImage(
+            '$imageURL$backdropSize${movieData.currentMovie.backdropPath}'));
+      }
+      if (movieData.discoveryListData['results'].length > 1) {
+        movieData.changeNextMovie(await Movies()
+            .getMovieDetails(movieData.movieList[movieData.movieIndex + 1]));
+        precacheImage(
+            NetworkImage(
+                '$imageURL$backdropSize${Movie.fromJson(movieData.discoveryListData['results'][movieData.movieIndex + 1]).backdropPath}'),
+            context);
+      }
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  void changeWatchText() {
     genreNames = [];
     for (int i = 0; i < genres.length; i++) {
       genreNames.add(genres[i]['name']);
@@ -67,6 +84,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         });
       }
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    changeWatchText();
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
