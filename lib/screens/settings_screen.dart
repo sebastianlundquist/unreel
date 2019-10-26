@@ -16,6 +16,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
   List<String> vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
   String watchText = 'a';
 
+  void newMovieSearch(Settings settings) async {
+    resetMovies();
+    discoveryListData = await Movies().getMovies(
+        settings.genre['id'],
+        settings.minRating,
+        settings.minVotes,
+        DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
+        DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
+        page);
+    movieList.clear();
+    if (discoveryListData == null) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No movies found! :('),
+        ),
+      );
+    } else {
+      for (var movie in discoveryListData['results'])
+        movieList.add(movie['id']);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     genreNames = [];
