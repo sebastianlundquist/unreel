@@ -86,17 +86,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                     : Image.asset(
                                         'images/placeholder_poster_1.png'),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 4.0, vertical: 4.0),
-                            child: Text(
-                              movie.title,
-                              style: TextStyle(shadows: <Shadow>[
-                                Shadow(
-                                    offset: Offset(1.0, 1.0), blurRadius: 3.0)
-                              ]),
-                            ),
-                          ),
                         ],
                       ),
                     );
