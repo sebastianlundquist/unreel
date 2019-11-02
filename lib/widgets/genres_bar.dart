@@ -82,6 +82,7 @@ class _GenresBarState extends State<GenresBar> {
             return FutureBuilder<Movie>(
                 future: MovieDatabase.db.getMovie(movieData.currentMovie.id),
                 builder: (BuildContext context, AsyncSnapshot<Movie> snapshot) {
+                  isFavorite = snapshot.hasData && snapshot.data != null;
                   return IconButton(
                     icon: snapshot.hasData && snapshot.data != null
                         ? Icon(

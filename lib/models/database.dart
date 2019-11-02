@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,8 +13,6 @@ class MovieDatabase {
 
   Future<Database> get database async {
     if (_database != null) return _database;
-
-    // if _database is null we instantiate it
     _database = await initDB();
     return _database;
   }
@@ -57,9 +54,7 @@ class MovieDatabase {
 
   newMovie(Movie newMovie) async {
     final db = await database;
-    print(json.encode(newMovie.genres.first));
     var res = await db.insert("Movie", newMovie.toJson());
-    print(newMovie.genres.toString());
     return res;
   }
 
@@ -78,7 +73,7 @@ class MovieDatabase {
     return list;
   }
 
-  getMoviesWithCondition(String query) async {
+  Future<List<Movie>> getMoviesWithCondition(String query) async {
     final db = await database;
     var res = await db.rawQuery(query);
     List<Movie> list =
