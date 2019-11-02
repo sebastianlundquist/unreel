@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/models/database.dart';
 import 'package:movie_app/models/movie.dart';
+import 'package:movie_app/models/movie_data.dart';
+import 'package:provider/provider.dart';
 
 bool isFavorite = false;
 
@@ -75,22 +78,33 @@ class _GenresBarState extends State<GenresBar> {
                     ? widget.movieObject.genres
                     : []),
           ),
-          IconButton(
-            icon: isFavorite
-                ? Icon(
-                    Icons.favorite,
-                  )
-                : Icon(
-                    Icons.favorite_border,
-                  ),
-            onPressed: () {
-              setState(
-                () {
-                  isFavorite = !isFavorite;
-                },
-              );
-            },
-          ),
+          Consumer<MovieData>(builder: (context, movieData, child) {
+            return FutureBuilder<Movie>(
+                future: MovieDatabase.db.getMovie(movieData.currentMovie.id),
+                builder: (BuildContext context, AsyncSnapshot<Movie> snapshot) {
+                  return IconButton(
+                    icon: snapshot.hasData && snapshot.data != null
+                        ? Icon(
+                            Icons.favorite,
+                          )
+                        : Icon(
+                            Icons.favorite_border,
+                          ),
+                    onPressed: () {
+                      setState(
+                        () {
+                          isFavorite = !isFavorite;
+                        },
+                      );
+                      if (isFavorite) {
+                        MovieDatabase.db.newMovie(movieData.currentMovie);
+                      } else {
+                        MovieDatabase.db.deleteMovie(movieData.currentMovie.id);
+                      }
+                    },
+                  );
+                });
+          }),
         ],
       ),
     );
