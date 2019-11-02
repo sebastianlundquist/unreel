@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Movie {
   final bool adult;
   final String backdropPath;
@@ -79,12 +81,39 @@ class Movie {
         voteAverage = json['vote_average'].toDouble(),
         voteCount = json['vote_count'];
 
+  Movie.fromSqLite(Map<String, dynamic> json)
+      : adult = json['adult'] == 0 ? false : true,
+        backdropPath = json['backdrop_path'],
+        belongsToCollection = json['belongs_to_collection'],
+        budget = json['budget'],
+        genres = jsonDecode(json['genres']),
+        homepage = json['homepage'],
+        id = json['id'],
+        imdbId = json['imdb_id'],
+        originalLanguage = json['original_language'],
+        originalTitle = json['original_title'],
+        overview = json['overview'],
+        popularity = json['popularity'].toDouble(),
+        posterPath = json['poster_path'],
+        productionCompanies = jsonDecode(json['production_companies']),
+        productionCountries = jsonDecode(json['production_countries']),
+        releaseDate = json['release_date'],
+        revenue = json['revenue'],
+        runtime = json['runtime'],
+        spokenLanguages = jsonDecode(json['spoken_languages']),
+        status = json['status'],
+        tagline = json['tagline'],
+        title = json['title'],
+        video = json['video'] == 0 ? false : true,
+        voteAverage = json['vote_average'].toDouble(),
+        voteCount = json['vote_count'];
+
   Map<String, dynamic> toJson() => {
-        'adult': adult,
+        'adult': adult ? 1 : 0,
         'backdrop_path': backdropPath,
         'belongs_to_collection': belongsToCollection,
         'budget': budget,
-        'genres': genres,
+        'genres': jsonEncode(genres),
         'homepage': homepage,
         'id': id,
         'imdb_id': imdbId,
@@ -93,16 +122,16 @@ class Movie {
         'overview': overview,
         'popularity': popularity,
         'poster_path': posterPath,
-        'production_companies': productionCompanies,
-        'production_countries': productionCountries,
+        'production_companies': jsonEncode(productionCompanies),
+        'production_countries': jsonEncode(productionCountries),
         'release_date': releaseDate,
         'revenue': revenue,
         'runtime': runtime,
-        'spoken_languages': spokenLanguages,
+        'spoken_languages': jsonEncode(spokenLanguages),
         'status': status,
         'tagline': tagline,
         'title': title,
-        'video': video,
+        'video': video ? 1 : 0,
         'vote_average': voteAverage,
         'vote_count': voteCount
       };
