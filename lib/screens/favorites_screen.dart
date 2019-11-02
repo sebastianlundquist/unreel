@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:movie_app/models/database.dart';
-import 'package:movie_app/models/movie.dart';
+import 'package:unreel/models/database.dart';
+import 'package:unreel/models/movie.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'movie_screen.dart';

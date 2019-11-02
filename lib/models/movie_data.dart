@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/shawshank.dart';
+import 'package:unreel/models/shawshank.dart';
 import 'movie.dart';
 
 const imageURL = 'https://image.tmdb.org/t/p';

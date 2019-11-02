@@ -1,4 +1,4 @@
-package com.sebastianlundquist.movie_app;
+package com.sebastianlundquist.unreel;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

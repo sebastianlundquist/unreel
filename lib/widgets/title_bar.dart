@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/movie.dart';
-import 'package:movie_app/widgets/star_display.dart';
+import 'package:unreel/models/movie.dart';
+import 'package:unreel/widgets/star_display.dart';
 
 class TitleBar extends StatelessWidget {
   final Movie movie;

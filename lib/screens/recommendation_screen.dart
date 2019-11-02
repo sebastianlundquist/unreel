@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/movie.dart';
-import 'package:movie_app/models/movie_data.dart';
-import 'package:movie_app/models/settings.dart';
-import 'package:movie_app/services/movies.dart';
-import 'package:movie_app/widgets/genres_bar.dart';
-import 'package:movie_app/widgets/movie_description.dart';
-import 'package:movie_app/widgets/title_display.dart';
+import 'package:unreel/models/movie.dart';
+import 'package:unreel/models/movie_data.dart';
+import 'package:unreel/models/settings.dart';
+import 'package:unreel/services/movies.dart';
+import 'package:unreel/widgets/genres_bar.dart';
+import 'package:unreel/widgets/movie_description.dart';
+import 'package:unreel/widgets/title_display.dart';
 import 'package:provider/provider.dart';
 
 int resultsPerPage = 20;

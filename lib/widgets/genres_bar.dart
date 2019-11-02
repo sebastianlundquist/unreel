@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:movie_app/models/database.dart';
-import 'package:movie_app/models/movie.dart';
+import 'package:unreel/models/database.dart';
+import 'package:unreel/models/movie.dart';
 import 'package:path_provider/path_provider.dart';
 
 bool isFavorite = false;

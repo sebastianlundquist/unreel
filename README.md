@@ -1,4 +1,4 @@
-# movie_app
+# unreel
 
 Get a movie suggestion with this Flutter app.
 

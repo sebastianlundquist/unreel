@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/movie.dart';
-import 'package:movie_app/widgets/title_bar.dart';
+import 'package:unreel/models/movie.dart';
+import 'package:unreel/widgets/title_bar.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TitleDisplay extends StatelessWidget {

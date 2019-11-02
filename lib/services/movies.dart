@@ -1,4 +1,4 @@
-import 'package:movie_app/models/movie.dart';
+import 'package:unreel/models/movie.dart';
 import 'networking.dart';
 
 const apiKey = 'bc0a0c6901ec87ac2bd09dc2264bb1af';

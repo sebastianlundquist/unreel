@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/movie.dart';
-import 'package:movie_app/widgets/genres_bar.dart';
-import 'package:movie_app/widgets/movie_description.dart';
-import 'package:movie_app/widgets/title_display.dart';
+import 'package:unreel/models/movie.dart';
+import 'package:unreel/widgets/genres_bar.dart';
+import 'package:unreel/widgets/movie_description.dart';
+import 'package:unreel/widgets/title_display.dart';
 
 class MovieScreen extends StatelessWidget {
   MovieScreen({@required this.movie});

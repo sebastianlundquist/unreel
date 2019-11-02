@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:movie_app/screens/navigation_screen.dart';
+import 'package:unreel/screens/navigation_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'models/movie_data.dart';
