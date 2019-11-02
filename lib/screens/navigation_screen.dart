@@ -32,7 +32,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
-            title: Text('Favorites'),
+            title: Text('Saved'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.track_changes),

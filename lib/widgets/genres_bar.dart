@@ -1,19 +1,40 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:movie_app/models/database.dart';
 import 'package:movie_app/models/movie.dart';
-import 'package:movie_app/models/movie_data.dart';
-import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
 
 bool isFavorite = false;
 
 class GenresBar extends StatefulWidget {
-  GenresBar({@required this.movieObject});
-  final Movie movieObject;
+  GenresBar({@required this.movie});
+  final Movie movie;
   @override
   _GenresBarState createState() => _GenresBarState();
 }
 
 class _GenresBarState extends State<GenresBar> {
+  Future<String> saveImageToFile(String imageUrl, bool isBackdrop) async {
+    var fullUrl = 'https://image.tmdb.org/t/p';
+    if (isBackdrop)
+      fullUrl += '/w780' + imageUrl;
+    else
+      fullUrl += '/w300' + imageUrl;
+    var response = await get(fullUrl);
+    String documentsDirectory = (await getApplicationDocumentsDirectory()).path;
+    File file = new File(documentsDirectory + imageUrl);
+    file.writeAsBytesSync(response.bodyBytes);
+    return file.path;
+  }
+
+  deleteImage(String imageUrl) async {
+    final dir =
+        Directory((await getApplicationDocumentsDirectory()).path + imageUrl);
+    dir.deleteSync(recursive: true);
+  }
+
   List<Widget> genreWidgets(List<dynamic> genres) {
     var list = List<Widget>();
     int count = genres.length > 3 ? 3 : genres.length;
@@ -66,7 +87,7 @@ class _GenresBarState extends State<GenresBar> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  minutesToComposite(widget.movieObject.runtime),
+                  minutesToComposite(widget.movie.runtime),
                 ),
               ),
             ],
@@ -74,38 +95,47 @@ class _GenresBarState extends State<GenresBar> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: genreWidgets(
-                widget.movieObject != null && widget.movieObject.genres != null
-                    ? widget.movieObject.genres
+                widget.movie != null && widget.movie.genres != null
+                    ? widget.movie.genres
                     : []),
           ),
-          Consumer<MovieData>(builder: (context, movieData, child) {
-            return FutureBuilder<Movie>(
-                future: MovieDatabase.db.getMovie(movieData.currentMovie.id),
-                builder: (BuildContext context, AsyncSnapshot<Movie> snapshot) {
-                  isFavorite = snapshot.hasData && snapshot.data != null;
-                  return IconButton(
-                    icon: snapshot.hasData && snapshot.data != null
-                        ? Icon(
-                            Icons.favorite,
-                          )
-                        : Icon(
-                            Icons.favorite_border,
-                          ),
-                    onPressed: () {
-                      setState(
-                        () {
-                          isFavorite = !isFavorite;
-                        },
-                      );
-                      if (isFavorite) {
-                        MovieDatabase.db.newMovie(movieData.currentMovie);
-                      } else {
-                        MovieDatabase.db.deleteMovie(movieData.currentMovie.id);
-                      }
-                    },
-                  );
-                });
-          }),
+          FutureBuilder<Movie>(
+              future: MovieDatabase.db.getMovie(widget.movie.id),
+              builder: (BuildContext context, AsyncSnapshot<Movie> snapshot) {
+                isFavorite = snapshot.hasData && snapshot.data != null;
+                return IconButton(
+                  icon: snapshot.hasData && snapshot.data != null
+                      ? Icon(
+                          Icons.favorite,
+                        )
+                      : Icon(
+                          Icons.favorite_border,
+                        ),
+                  onPressed: () async {
+                    setState(
+                      () {
+                        isFavorite = !isFavorite;
+                      },
+                    );
+                    if (isFavorite) {
+                      MovieDatabase.db.newMovie(widget.movie);
+                      saveImageToFile(widget.movie.posterPath, false);
+                      saveImageToFile(widget.movie.backdropPath, true);
+                    } else {
+                      MovieDatabase.db.deleteMovie(widget.movie.id);
+                      MovieDatabase.db.deleteMovie(widget.movie.id);
+                      final backdropDir = Directory(
+                          (await getApplicationDocumentsDirectory()).path +
+                              widget.movie.backdropPath);
+                      backdropDir.deleteSync(recursive: true);
+                      final posterDir = Directory(
+                          (await getApplicationDocumentsDirectory()).path +
+                              widget.movie.posterPath);
+                      posterDir.deleteSync(recursive: true);
+                    }
+                  },
+                );
+              }),
         ],
       ),
     );

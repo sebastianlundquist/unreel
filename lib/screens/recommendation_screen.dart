@@ -94,8 +94,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     return Consumer<MovieData>(builder: (context, movieData, child) {
       return Column(
         children: <Widget>[
-          TitleDisplay(),
-          GenresBar(movieObject: movieData.currentMovie),
+          TitleDisplay(movie: movieData.currentMovie),
+          GenresBar(movie: movieData.currentMovie),
           MovieDescription(movieObject: movieData.currentMovie),
           Padding(
             padding: const EdgeInsets.all(16.0),

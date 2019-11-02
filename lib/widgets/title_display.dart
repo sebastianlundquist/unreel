@@ -1,22 +1,36 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/movie_data.dart';
+import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/widgets/title_bar.dart';
-import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
 
 class TitleDisplay extends StatelessWidget {
+  final Movie movie;
+  TitleDisplay({@required this.movie});
+  Future<File> _getLocalFile(String filename) async {
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File f = new File('$dir/$filename');
+    if (f.existsSync()) return f;
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.bottomCenter,
       children: <Widget>[
         ShaderMask(
-          child: Consumer<MovieData>(
-            builder: (context, movieData, child) {
-              return FadeInImage(
-                placeholder: AssetImage('images/transparent_backdrop.png'),
-                image: movieData.backdropImage,
-              );
-            },
+          child: FutureBuilder<File>(
+            future: _getLocalFile(movie.backdropPath.replaceFirst('/', '')),
+            builder: (context, snapshot) => FadeInImage(
+              fadeInDuration: Duration(milliseconds: 200),
+              placeholder: AssetImage('images/transparent_backdrop.png'),
+              image: snapshot != null && snapshot.data != null
+                  ? FileImage(snapshot.data)
+                  : NetworkImage(
+                      'https://image.tmdb.org/t/p/w780' + movie.backdropPath),
+            ),
           ),
           shaderCallback: (Rect bounds) {
             return LinearGradient(
@@ -33,7 +47,7 @@ class TitleDisplay extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: TitleBar(),
+          child: TitleBar(movie: movie),
         ),
       ],
     );
