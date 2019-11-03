@@ -7,7 +7,8 @@ import 'package:path_provider/path_provider.dart';
 
 class TitleDisplay extends StatelessWidget {
   final Movie movie;
-  TitleDisplay({@required this.movie});
+  final bool isSaved;
+  TitleDisplay({@required this.movie, @required this.isSaved});
   Future<File> _getLocalFile(String filename) async {
     String dir = (await getApplicationDocumentsDirectory()).path;
     File f = new File('$dir/$filename');
@@ -21,17 +22,20 @@ class TitleDisplay extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       children: <Widget>[
         ShaderMask(
-          child: FutureBuilder<File>(
-            future: _getLocalFile(movie.backdropPath.replaceFirst('/', '')),
-            builder: (context, snapshot) => FadeInImage(
-              fadeInDuration: Duration(milliseconds: 200),
-              placeholder: AssetImage('images/transparent_backdrop.png'),
-              image: snapshot != null && snapshot.data != null
-                  ? FileImage(snapshot.data)
-                  : NetworkImage(
+          child: isSaved
+              ? FutureBuilder<File>(
+                  future:
+                      _getLocalFile(movie.backdropPath.replaceFirst('/', '')),
+                  builder: (context, snapshot) =>
+                      snapshot != null && snapshot.data != null
+                          ? Image.file(snapshot.data)
+                          : Image.asset('images/transparent_backdrop.png'),
+                )
+              : FadeInImage(
+                  image: NetworkImage(
                       'https://image.tmdb.org/t/p/w780' + movie.backdropPath),
-            ),
-          ),
+                  placeholder: AssetImage('images/transparent_backdrop.png'),
+                ),
           shaderCallback: (Rect bounds) {
             return LinearGradient(
               begin: Alignment.topCenter,

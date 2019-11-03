@@ -13,7 +13,10 @@ class MovieScreen extends StatelessWidget {
       backgroundColor: Color(0xFF131C25),
       body: Column(
         children: <Widget>[
-          TitleDisplay(movie: movie),
+          TitleDisplay(
+            movie: movie,
+            isSaved: true,
+          ),
           GenresBar(movie: movie),
           MovieDescription(movieObject: movie),
         ],
