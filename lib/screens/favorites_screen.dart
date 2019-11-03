@@ -1,16 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:unreel/models/database.dart';
 import 'package:unreel/models/movie.dart';
-import 'package:path_provider/path_provider.dart';
-
-import 'movie_screen.dart';
-
-const baseUrl = 'https://image.tmdb.org/t/p/';
-const posterWidth = 'w300';
+import 'package:unreel/screens/movie_screen.dart';
+import 'package:unreel/services/files.dart';
 
 class FavoritesScreen extends StatefulWidget {
   @override
@@ -18,23 +12,6 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  Future<String> _loadMovieAsset() async {
-    return await rootBundle.loadString('assets/shawshank.json');
-  }
-
-  Future loadMovie() async {
-    String jsonString = await _loadMovieAsset();
-    final jsonResponse = json.decode(jsonString);
-    Movie movie = new Movie.fromJson(jsonResponse);
-    MovieDatabase.db.newMovie(movie);
-  }
-
-  Future<File> _getLocalFile(String filename) async {
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    File f = new File('$dir/$filename');
-    return f;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -59,9 +36,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MovieScreen(
-                              movie: movie,
-                            ),
+                            builder: (context) => MovieScreen(movie: movie),
                           ),
                         );
                       },
@@ -69,16 +44,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         setState(() {
                           MovieDatabase.db.deleteMovie(movie.id);
                         });
-                        final dir = Directory(
-                            (await getApplicationDocumentsDirectory()).path +
-                                movie.posterPath);
-                        dir.deleteSync(recursive: true);
+                        Files.deleteImage(movie.posterPath);
+                        Files.deleteImage(movie.backdropPath);
                       },
                       child: Stack(
                         alignment: Alignment.bottomCenter,
                         children: <Widget>[
                           FutureBuilder<File>(
-                            future: _getLocalFile(
+                            future: Files.getLocalFile(
                                 movie.posterPath.replaceFirst('/', '')),
                             builder: (context, snapshot) =>
                                 snapshot.data != null
@@ -91,9 +64,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     );
                   },
                 )
-              : Center(
-                  child: Text('You do not have any saved movies.'),
-                );
+              : Center(child: Text('You do not have any saved movies.'));
         },
       ),
     );

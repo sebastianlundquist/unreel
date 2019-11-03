@@ -26,8 +26,8 @@ const List<Map<String, dynamic>> genres = [
 
 class Settings extends ChangeNotifier {
   Settings();
-  double minRating = 4.0;
-  int minVotes = 0;
+  double minRating = 7.0;
+  int minVotes = 3000;
   RangeValues yearSpan = RangeValues(
       DateTime.now().year.toDouble() - 100, DateTime.now().year.toDouble());
 

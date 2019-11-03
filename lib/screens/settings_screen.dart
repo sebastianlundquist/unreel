@@ -82,6 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         setState(() {
           watchText = 'a';
         });
+        break;
       }
     }
   }

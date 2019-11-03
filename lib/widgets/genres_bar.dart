@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:unreel/models/database.dart';
 import 'package:unreel/models/movie.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:unreel/services/files.dart';
 
 bool isFavorite = false;
 
@@ -16,25 +13,6 @@ class GenresBar extends StatefulWidget {
 }
 
 class _GenresBarState extends State<GenresBar> {
-  Future<String> saveImageToFile(String imageUrl, bool isBackdrop) async {
-    var fullUrl = 'https://image.tmdb.org/t/p';
-    if (isBackdrop)
-      fullUrl += '/w780' + imageUrl;
-    else
-      fullUrl += '/w300' + imageUrl;
-    var response = await get(fullUrl);
-    String documentsDirectory = (await getApplicationDocumentsDirectory()).path;
-    File file = new File(documentsDirectory + imageUrl);
-    file.writeAsBytesSync(response.bodyBytes);
-    return file.path;
-  }
-
-  deleteImage(String imageUrl) async {
-    final dir =
-        Directory((await getApplicationDocumentsDirectory()).path + imageUrl);
-    dir.deleteSync(recursive: true);
-  }
-
   List<Widget> genreWidgets(List<dynamic> genres) {
     var list = List<Widget>();
     int count = genres.length > 3 ? 3 : genres.length;
@@ -119,19 +97,12 @@ class _GenresBarState extends State<GenresBar> {
                     );
                     if (isFavorite) {
                       MovieDatabase.db.newMovie(widget.movie);
-                      saveImageToFile(widget.movie.posterPath, false);
-                      saveImageToFile(widget.movie.backdropPath, true);
+                      Files.saveImageToFile(widget.movie.posterPath, false);
+                      Files.saveImageToFile(widget.movie.backdropPath, true);
                     } else {
                       MovieDatabase.db.deleteMovie(widget.movie.id);
-                      MovieDatabase.db.deleteMovie(widget.movie.id);
-                      final backdropDir = Directory(
-                          (await getApplicationDocumentsDirectory()).path +
-                              widget.movie.backdropPath);
-                      backdropDir.deleteSync(recursive: true);
-                      final posterDir = Directory(
-                          (await getApplicationDocumentsDirectory()).path +
-                              widget.movie.posterPath);
-                      posterDir.deleteSync(recursive: true);
+                      Files.deleteImage(widget.movie.backdropPath);
+                      Files.deleteImage(widget.movie.posterPath);
                     }
                   },
                 );
