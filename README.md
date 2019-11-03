@@ -1,7 +1,3 @@
-# Unreel
-
-Unreel is a movie app made with Flutter that gives the user recommendations for movies to watch depending on their input.
-
 ## Features
 
 * View detailed but carefully laid out information about the movies you are recommended.
