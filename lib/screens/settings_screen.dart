@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:unreel/models/movie.dart';
 import 'package:unreel/models/movie_data.dart';
 import 'package:unreel/models/settings.dart';
 import 'package:unreel/models/shawshank.dart';
 import 'package:unreel/services/movies.dart';
-import 'package:provider/provider.dart';
 
 List<String> genreNames;
 

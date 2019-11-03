@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'movie.dart';
+import 'package:unreel/models/movie.dart';
 
 class MovieDatabase {
   MovieDatabase._();

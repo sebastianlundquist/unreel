@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import 'package:unreel/models/movie.dart';
 import 'package:unreel/services/files.dart';
 import 'package:unreel/widgets/title_bar.dart';

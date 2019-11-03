@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:unreel/models/movie.dart';
 import 'package:unreel/widgets/star_display.dart';
 

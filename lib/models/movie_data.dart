@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'package:unreel/models/movie.dart';
 import 'package:unreel/models/shawshank.dart';
-import 'movie.dart';
 
 const imageURL = 'https://image.tmdb.org/t/p';
 const backdropSize = '/w780';

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import 'package:unreel/models/languages.dart';
 import 'package:unreel/models/movie.dart';
-import 'package:intl/intl.dart';
-import 'description_row.dart';
+import 'package:unreel/widgets/description_row.dart';
 
 List<String> genres;
 List<String> productionCountries;

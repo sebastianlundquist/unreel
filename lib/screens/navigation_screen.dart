@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'favorites_screen.dart';
-import 'recommendation_screen.dart';
-import 'settings_screen.dart';
+
+import 'package:unreel/screens/favorites_screen.dart';
+import 'package:unreel/screens/recommendation_screen.dart';
+import 'package:unreel/screens/settings_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
   @override
