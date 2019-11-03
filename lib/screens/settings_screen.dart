@@ -37,7 +37,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (movieData.discoveryListData == null) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text('No movies found! :('),
+          backgroundColor: Color(0xFF1D2733),
+          content: Text(
+            'No movies found! :(',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       );
     } else {

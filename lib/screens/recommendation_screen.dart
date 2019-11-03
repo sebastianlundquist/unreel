@@ -45,7 +45,11 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
       if (movieData.discoveryListData == null) {
         Scaffold.of(context).showSnackBar(
           SnackBar(
-            content: Text('No movies found! :('),
+            backgroundColor: Color(0xFF1D2733),
+            content: Text(
+              'No movies found! :(',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         );
       } else {
@@ -78,7 +82,11 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
       if (movieData.discoveryListData == null) {
         Scaffold.of(context).showSnackBar(
           SnackBar(
-            content: Text('No movies found! :('),
+            backgroundColor: Color(0xFF1D2733),
+            content: Text(
+              'No movies found! :(',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         );
       } else {
