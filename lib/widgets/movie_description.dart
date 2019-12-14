@@ -57,11 +57,12 @@ class MovieDescription extends StatelessWidget {
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Column(
               children: <Widget>[
-                DescriptionRow(
-                  title: "Original Title:",
-                  description:
-                      movieObject != null ? movieObject.originalTitle : '',
-                ),
+                if (movieObject != null &&
+                    movieObject.title != movieObject.originalTitle)
+                  DescriptionRow(
+                    title: "Original Title:",
+                    description: movieObject.originalTitle,
+                  ),
                 DescriptionRow(
                   title: "Genres:",
                   description: genres.join(', '),
