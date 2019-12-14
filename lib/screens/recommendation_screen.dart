@@ -10,6 +10,7 @@ import 'package:unreel/widgets/movie_description.dart';
 import 'package:unreel/widgets/title_display.dart';
 
 int resultsPerPage = 20;
+bool isSnackBarActive = false;
 
 class RecommendationScreen extends StatefulWidget {
   @override
@@ -19,14 +20,20 @@ class RecommendationScreen extends StatefulWidget {
 class _RecommendationScreenState extends State<RecommendationScreen> {
   void preloadNextMovie() async {
     var movieData = Provider.of<MovieData>(context);
-    if (movieData.discoveryListData != null) {
-      precacheImage(
-          NetworkImage(
-              '$imageURL$backdropSize${Movie.fromJson(movieData.discoveryListData['results'][movieData.movieIndex + 1]).backdropPath}'),
-          context);
+    var movieListLength = movieData.movieList.length;
+    var nextMovieIndex = movieData.movieIndex + 1;
+    if (nextMovieIndex < movieListLength) {
+      if (movieData.discoveryListData != null) {
+        precacheImage(
+            NetworkImage(
+                '$imageURL$backdropSize${Movie.fromJson(movieData.discoveryListData['results'][movieData.movieIndex + 1]).backdropPath}'),
+            context);
+      }
+      movieData.changeNextMovie(
+          await Movies().getMovieDetails(movieData.movieList[nextMovieIndex]));
+    } else {
+      movieData.nextMovie = null;
     }
-    movieData.changeNextMovie(await Movies()
-        .getMovieDetails(movieData.movieList[movieData.movieIndex + 1]));
   }
 
   void init() async {
@@ -42,16 +49,22 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
           DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
           movieData.page);
       movieData.movieList.clear();
-      if (movieData.discoveryListData == null) {
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Color(0xFF1D2733),
-            content: Text(
-              'No movies found! :(',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        );
+      if (movieData.discoveryListData == null && !isSnackBarActive) {
+        isSnackBarActive = true;
+        Scaffold.of(context)
+            .showSnackBar(
+              SnackBar(
+                backgroundColor: Color(0xFF1D2733),
+                content: Text(
+                  'No movies found! :(',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            )
+            .closed
+            .then((SnackBarClosedReason reason) {
+          isSnackBarActive = false;
+        });
       } else {
         for (var movie in movieData.discoveryListData['results'])
           movieData.movieList.add(movie['id']);
@@ -63,38 +76,62 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   void goToNextMovie() async {
     var settings = Provider.of<Settings>(context);
     var movieData = Provider.of<MovieData>(context);
-    movieData.changeCurrentMovie(movieData.nextMovie);
-    movieData.changeBackdropImage(NetworkImage(
-        '$imageURL$backdropSize${movieData.currentMovie.backdropPath}'));
-    if (movieData.movieIndex != resultsPerPage - 2) {
-      movieData.changeMovieIndex(movieData.movieIndex + 1);
-    } else {
-      movieData.changeMovieIndex(0);
-      movieData.changePage(movieData.page + 1);
-      movieData.changeDiscoveryListData(await Movies().getMovies(
-          settings.genre['id'],
-          settings.minRating,
-          settings.minVotes,
-          DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
-          DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
-          movieData.page));
-      movieData.movieList.clear();
-      if (movieData.discoveryListData == null) {
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Color(0xFF1D2733),
-            content: Text(
-              'No movies found! :(',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        );
+    if (movieData.nextMovie != null) {
+      movieData.changeCurrentMovie(movieData.nextMovie);
+      movieData.changeBackdropImage(NetworkImage(
+          '$imageURL$backdropSize${movieData.currentMovie.backdropPath}'));
+      if (movieData.movieIndex != resultsPerPage - 2) {
+        movieData.changeMovieIndex(movieData.movieIndex + 1);
       } else {
-        for (var movie in movieData.discoveryListData['results'])
-          movieData.movieList.add(movie['id']);
+        movieData.changeMovieIndex(0);
+        movieData.changePage(movieData.page + 1);
+        movieData.changeDiscoveryListData(await Movies().getMovies(
+            settings.genre['id'],
+            settings.minRating,
+            settings.minVotes,
+            DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
+            DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
+            movieData.page));
+        movieData.movieList.clear();
+        if (movieData.discoveryListData == null && !isSnackBarActive) {
+          isSnackBarActive = true;
+          Scaffold.of(context)
+              .showSnackBar(
+                SnackBar(
+                  backgroundColor: Color(0xFF1D2733),
+                  content: Text(
+                    'No movies found! :(',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              )
+              .closed
+              .then((SnackBarClosedReason reason) {
+            isSnackBarActive = false;
+          });
+        } else {
+          for (var movie in movieData.discoveryListData['results'])
+            movieData.movieList.add(movie['id']);
+        }
       }
+      preloadNextMovie();
+    } else if (!isSnackBarActive) {
+      isSnackBarActive = true;
+      Scaffold.of(context)
+          .showSnackBar(
+            SnackBar(
+              backgroundColor: Color(0xFF1D2733),
+              content: Text(
+                'There are no new movies! :(',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          )
+          .closed
+          .then((SnackBarClosedReason reason) {
+        isSnackBarActive = false;
+      });
     }
-    preloadNextMovie();
   }
 
   @override
