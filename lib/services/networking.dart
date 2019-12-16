@@ -8,7 +8,13 @@ class NetworkHelper {
   final String url;
 
   Future<dynamic> getData() async {
-    http.Response response = await http.get(url);
+    http.Response response;
+    try {
+      response = await http.get(url);
+    } catch (e) {
+      print('HTTP request failed.');
+      return null;
+    }
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
