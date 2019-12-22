@@ -54,12 +54,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             '$imageURL$backdropSize${movieData.currentMovie.backdropPath}'));
       }
       if (movieData.discoveryListData['results'].length > 1) {
-        movieData.changeNextMovie(await Movies()
-            .getMovieDetails(movieData.movieList[movieData.movieIndex + 1]));
-        precacheImage(
-            NetworkImage(
-                '$imageURL$backdropSize${Movie.fromJson(movieData.discoveryListData['results'][movieData.movieIndex + 1]).backdropPath}'),
-            context);
+        movieData.preloadNextMovie(context);
       }
     }
   }

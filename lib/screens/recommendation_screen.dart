@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:unreel/models/movie.dart';
 import 'package:unreel/models/movie_data.dart';
 import 'package:unreel/models/settings.dart';
 import 'package:unreel/services/movies.dart';
@@ -11,7 +10,6 @@ import 'package:unreel/widgets/title_display.dart';
 
 int resultsPerPage = 20;
 bool isSnackBarActive = false;
-bool endOfListIsReached = false;
 
 class RecommendationScreen extends StatefulWidget {
   @override
@@ -19,32 +17,23 @@ class RecommendationScreen extends StatefulWidget {
 }
 
 class _RecommendationScreenState extends State<RecommendationScreen> {
-  Future<bool> preloadNextMovie() async {
-    var movieData = Provider.of<MovieData>(context);
-    var movieListLength = movieData.movieList.length;
-    var nextMovieIndex = movieData.movieIndex + 1;
-    if (nextMovieIndex < movieListLength) {
-      endOfListIsReached = false;
-      var nextMovie =
-          await Movies().getMovieDetails(movieData.movieList[nextMovieIndex]);
-      if (nextMovie != null) {
-        movieData.changeNextMovie(nextMovie);
-        if (movieData.discoveryListData != null) {
-          precacheImage(
-              NetworkImage(
-                  '$imageURL$backdropSize${Movie.fromJson(movieData.discoveryListData['results'][movieData.movieIndex + 1]).backdropPath}'),
-              context, onError: (e, stackTrace) {
-            print('Could not precache image. Reason:\n' + e.toString());
-            return false;
-          });
-        }
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      endOfListIsReached = true;
-      return false;
+  void showSnackBar(String text) {
+    if (!isSnackBarActive) {
+      isSnackBarActive = true;
+      Scaffold.of(context)
+          .showSnackBar(
+            SnackBar(
+              backgroundColor: Color(0xFF1D2733),
+              content: Text(
+                text,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          )
+          .closed
+          .then((SnackBarClosedReason reason) {
+        isSnackBarActive = false;
+      });
     }
   }
 
@@ -62,46 +51,16 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
       if (movieList == null) return;
       movieData.changeDiscoveryListData(movieList);
       if (movieData.discoveryListData == null) {
-        if (!isSnackBarActive) {
-          isSnackBarActive = true;
-          Scaffold.of(context)
-              .showSnackBar(
-                SnackBar(
-                  backgroundColor: Color(0xFF1D2733),
-                  content: Text(
-                    'Couldn\'t fetch new movies. Check your connection.',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              )
-              .closed
-              .then((SnackBarClosedReason reason) {
-            isSnackBarActive = false;
-          });
-        }
+        showSnackBar('Couldn\'t fetch new movies. Check your connection.');
         return;
       }
       movieData.movieList.clear();
-      if (movieData.discoveryListData == null && !isSnackBarActive) {
-        isSnackBarActive = true;
-        Scaffold.of(context)
-            .showSnackBar(
-              SnackBar(
-                backgroundColor: Color(0xFF1D2733),
-                content: Text(
-                  'No movies found! :(',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            )
-            .closed
-            .then((SnackBarClosedReason reason) {
-          isSnackBarActive = false;
-        });
+      if (movieData.discoveryListData == null) {
+        showSnackBar('No movies found! :(');
       } else {
         for (var movie in movieData.discoveryListData['results'])
           movieData.movieList.add(movie['id']);
-        preloadNextMovie();
+        movieData.preloadNextMovie(context);
       }
     }
   }
@@ -109,7 +68,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   void goToNextMovie() async {
     var settings = Provider.of<Settings>(context);
     var movieData = Provider.of<MovieData>(context);
-    if (!endOfListIsReached) {
+    if (!movieData.endOfListIsReached) {
       try {
         movieData.changeCurrentMovie(movieData.nextMovie);
         movieData.changeBackdropImage(NetworkImage(
@@ -129,65 +88,20 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
           if (movieList == null) return;
           movieData.changeDiscoveryListData(movieList);
           movieData.movieList.clear();
-          if (movieData.discoveryListData == null && !isSnackBarActive) {
-            isSnackBarActive = true;
-            Scaffold.of(context)
-                .showSnackBar(
-                  SnackBar(
-                    backgroundColor: Color(0xFF1D2733),
-                    content: Text(
-                      'No movies found! :(',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                )
-                .closed
-                .then((SnackBarClosedReason reason) {
-              isSnackBarActive = false;
-            });
+          if (movieData.discoveryListData == null) {
+            showSnackBar('No movies found! :(');
           } else {
             for (var movie in movieData.discoveryListData['results'])
               movieData.movieList.add(movie['id']);
           }
         }
-        preloadNextMovie();
+        movieData.preloadNextMovie(context);
       } catch (e) {
-        if (!isSnackBarActive) {
-          isSnackBarActive = true;
-          Scaffold.of(context)
-              .showSnackBar(
-                SnackBar(
-                  backgroundColor: Color(0xFF1D2733),
-                  content: Text(
-                    'Couldn\'t fetch new movies. Check your connection.',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              )
-              .closed
-              .then((SnackBarClosedReason reason) {
-            isSnackBarActive = false;
-          });
-        }
+        showSnackBar('Couldn\'t fetch new movies. Check your connection.');
       }
     } else {
-      if (!isSnackBarActive) {
-        isSnackBarActive = true;
-        Scaffold.of(context)
-            .showSnackBar(
-              SnackBar(
-                backgroundColor: Color(0xFF1D2733),
-                content: Text(
-                  'There are no new movies! :(',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            )
-            .closed
-            .then((SnackBarClosedReason reason) {
-          isSnackBarActive = false;
-        });
-      }
+      showSnackBar(
+          'No more movies match your filters. Change them to discover more movies!');
     }
   }
 
@@ -208,34 +122,12 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
             child: Consumer<Settings>(builder: (context, settings, child) {
               return FloatingActionButton(
                 onPressed: () async {
-                  print("current: " + movieData.currentMovie.title);
-                  print("next: " + movieData.nextMovie.title);
                   if (movieData.nextMovie != null &&
                       movieData.currentMovie != movieData.nextMovie) {
                     goToNextMovie();
                   } else {
-                    bool nextMovieIsLoaded = await preloadNextMovie();
-                    if (nextMovieIsLoaded) {
-                      goToNextMovie();
-                    } else {
-                      if (!isSnackBarActive) {
-                        isSnackBarActive = true;
-                        Scaffold.of(context)
-                            .showSnackBar(
-                              SnackBar(
-                                backgroundColor: Color(0xFF1D2733),
-                                content: Text(
-                                  'Couldn\'t fetch movie. Please check your connection.',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            )
-                            .closed
-                            .then((SnackBarClosedReason reason) {
-                          isSnackBarActive = false;
-                        });
-                      }
-                    }
+                    await movieData.preloadNextMovie(context);
+                    goToNextMovie();
                   }
                 },
                 child: Icon(Icons.refresh),
