@@ -33,34 +33,93 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   itemBuilder: (BuildContext context, int position) {
                     Movie movie = snapshot.data[position];
                     return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MovieScreen(movie: movie),
-                          ),
-                        );
-                      },
                       onLongPress: () async {
-                        setState(() {
-                          MovieDatabase.db.deleteMovie(movie.id);
-                        });
-                        Files.deleteImage(movie.posterPath);
-                        Files.deleteImage(movie.backdropPath);
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Color(0xFF131C25),
+                                elevation: 0.0,
+                                title: Text('Remove'),
+                                content: RichText(
+                                  text: TextSpan(
+                                    children: <TextSpan>[
+                                      TextSpan(text: 'Do you want to remove '),
+                                      TextSpan(
+                                        text: '${movie.title}',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.amber),
+                                      ),
+                                      TextSpan(text: ' from your saved movies?')
+                                    ],
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text('Yes'),
+                                    onPressed: () {
+                                      setState(() {
+                                        MovieDatabase.db.deleteMovie(movie.id);
+                                      });
+                                      Files.deleteImage(movie.posterPath);
+                                      Files.deleteImage(movie.backdropPath);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  FlatButton(
+                                    child: Text('No'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
                       },
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: <Widget>[
-                          FutureBuilder<File>(
-                            future: Files.getLocalFile(
-                                movie.posterPath.replaceFirst('/', '')),
-                            builder: (context, snapshot) =>
-                                snapshot.data != null
-                                    ? Image.file(snapshot.data)
-                                    : Image.asset(
+                      child: FutureBuilder<File>(
+                        future: Files.getLocalFile(
+                            movie.posterPath.replaceFirst('/', '')),
+                        builder: (context, snapshot) => snapshot.data != null
+                            ? Stack(
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: FileImage(snapshot.data),
+                                          fit: BoxFit.cover),
+                                    ),
+                                  ),
+                                  Material(
+                                    type: MaterialType.transparency,
+                                    child: Container(
+                                      height: double.infinity,
+                                      width: double.infinity,
+                                      child: FlatButton(
+                                        child: null,
+                                        highlightColor: Color(0xaa000000),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MovieScreen(movie: movie),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(
                                         'images/placeholder_poster_1.png'),
-                          ),
-                        ],
+                                  ),
+                                ),
+                              ),
                       ),
                     );
                   },
