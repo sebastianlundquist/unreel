@@ -26,7 +26,7 @@ class TitleDisplay extends StatelessWidget {
                           : Image.asset('images/transparent_backdrop.png'),
                 )
               : FadeInImage(
-                  image: movie != null
+                  image: movie != null && movie.backdropPath != null
                       ? NetworkImage('https://image.tmdb.org/t/p/w780' +
                           movie.backdropPath)
                       : AssetImage('images/transparent_backdrop.png'),

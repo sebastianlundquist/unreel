@@ -64,7 +64,9 @@ class MovieData extends ChangeNotifier {
       var nextMovie = await Movies().getMovieDetails(movieList[nextMovieIndex]);
       if (nextMovie != null) {
         changeNextMovie(nextMovie);
-        if (discoveryListData != null) {
+        if (discoveryListData != null &&
+            discoveryListData['results'][movieIndex + 1]['backdrop_path'] !=
+                null) {
           precacheImage(
               NetworkImage(
                   '$imageURL$backdropSize${Movie.fromJson(discoveryListData['results'][movieIndex + 1]).backdropPath}'),
