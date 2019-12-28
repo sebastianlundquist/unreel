@@ -6,6 +6,7 @@ import 'package:unreel/models/movie_data.dart';
 import 'package:unreel/models/settings.dart';
 import 'package:unreel/models/shawshank.dart';
 import 'package:unreel/services/movies.dart';
+import 'package:unreel/services/utils.dart';
 
 List<String> genreNames;
 
@@ -36,15 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     movieData.movieList.clear();
     if (movieData.discoveryListData == null) {
       movieData.endOfListIsReached = true;
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Color(0xFF1D2733),
-          content: Text(
-            'No movies match your filters. :(',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
+      Utils.showSnackBar('No movies match your filters. :(', context);
     } else {
       movieData.endOfListIsReached = false;
       for (var movie in movieData.discoveryListData['results'])
