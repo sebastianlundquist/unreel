@@ -57,6 +57,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                 ),
                                 actions: <Widget>[
                                   FlatButton(
+                                    child: Text('No'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  FlatButton(
                                     child: Text('Yes'),
                                     onPressed: () {
                                       setState(() {
@@ -68,12 +74,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                       if (movie.backdropPath != null &&
                                           movie.backdropPath.isNotEmpty)
                                         Files.deleteImage(movie.backdropPath);
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  FlatButton(
-                                    child: Text('No'),
-                                    onPressed: () {
                                       Navigator.of(context).pop();
                                     },
                                   )
