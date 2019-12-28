@@ -132,7 +132,10 @@ class _RecommendationScreenState extends State<RecommendationScreen>
                     goToNextMovie();
                   }
                 },
-                child: Icon(Icons.refresh),
+                child: Icon(
+                  Icons.refresh,
+                  color: Color(0xFF131C25),
+                ),
               );
             }),
           ),
