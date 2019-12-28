@@ -96,10 +96,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
           }
         }
         movieData.nextMovieExists = await movieData.preloadNextMovie(context);
-        if (movieData.endOfListIsReached) {
-          showSnackBar(
-              'No more movies match your filters. Change them to discover more movies!');
-        } else if (!movieData.nextMovieExists) {
+        if (!movieData.nextMovieExists) {
           movieData.changeMovieIndex(movieData.movieIndex - 1);
           showSnackBar('Couldn\'t fetch new movies. Check your connection.');
         }
