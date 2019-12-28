@@ -36,18 +36,19 @@ class MovieDescription extends StatelessWidget {
           controller: ScrollController(),
           padding: EdgeInsets.all(0.0),
           children: <Widget>[
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Text(
-                movieObject != null ? movieObject.tagline : '',
-                style: Theme.of(context)
-                    .textTheme
-                    .body1
-                    .copyWith(fontStyle: FontStyle.italic),
-                textAlign: TextAlign.center,
+            if (movieObject != null && movieObject.tagline != '')
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Text(
+                  movieObject != null ? movieObject.tagline : '',
+                  style: Theme.of(context)
+                      .textTheme
+                      .body1
+                      .copyWith(fontStyle: FontStyle.italic),
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
