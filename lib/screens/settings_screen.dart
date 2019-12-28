@@ -35,16 +35,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         movieData.page));
     movieData.movieList.clear();
     if (movieData.discoveryListData == null) {
+      movieData.endOfListIsReached = true;
       Scaffold.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Color(0xFF1D2733),
           content: Text(
-            'No movies found! :(',
+            'No movies match your filters. :(',
             style: TextStyle(color: Colors.white),
           ),
         ),
       );
     } else {
+      movieData.endOfListIsReached = false;
       for (var movie in movieData.discoveryListData['results'])
         movieData.movieList.add(movie['id']);
       if (movieData.discoveryListData['results'].length > 0) {

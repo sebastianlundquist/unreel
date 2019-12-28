@@ -1,3 +1,4 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,8 @@ class RecommendationScreen extends StatefulWidget {
   _RecommendationScreenState createState() => _RecommendationScreenState();
 }
 
-class _RecommendationScreenState extends State<RecommendationScreen> {
+class _RecommendationScreenState extends State<RecommendationScreen>
+    with AfterLayoutMixin<RecommendationScreen> {
   void showSnackBar(String text) {
     if (!isSnackBarActive) {
       isSnackBarActive = true;
@@ -37,10 +39,10 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     }
   }
 
-  void init() async {
+  Future<bool> init() async {
     var settings = Provider.of<Settings>(context);
     var movieData = Provider.of<MovieData>(context);
-    if (movieData.discoveryListData == null) {
+    if (movieData.discoveryListData == null && !movieData.endOfListIsReached) {
       var movieList = await Movies().getMovies(
           settings.genre['id'],
           settings.minRating,
@@ -48,21 +50,20 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
           DateTime.utc(settings.yearSpan.start.toInt(), 1, 1),
           DateTime.utc(settings.yearSpan.end.toInt(), 12, 31),
           movieData.page);
-      if (movieList == null) return;
-      movieData.changeDiscoveryListData(movieList);
-      if (movieData.discoveryListData == null) {
-        showSnackBar('Couldn\'t fetch new movies. Check your connection.');
-        return;
-      }
-      movieData.movieList.clear();
-      if (movieData.discoveryListData == null) {
-        showSnackBar('No movies found! :(');
+      if (movieList == null) {
+        movieData.initialLoadSuccessful = false;
+        showSnackBar('Couldn\'t fetch movies. Check your connection.');
+        return false;
       } else {
+        movieData.changeDiscoveryListData(movieList);
+        movieData.movieList.clear();
         for (var movie in movieData.discoveryListData['results'])
           movieData.movieList.add(movie['id']);
         movieData.preloadNextMovie(context);
+        movieData.initialLoadSuccessful = true;
       }
     }
+    return true;
   }
 
   void goToNextMovie() async {
@@ -95,6 +96,10 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
               movieData.movieList.add(movie['id']);
           }
         }
+        if (movieData.endOfListIsReached) {
+          showSnackBar(
+              'No more movies match your filters. Change them to discover more movies!');
+        }
         movieData.nextMovieExists = await movieData.preloadNextMovie(context);
         if (!movieData.nextMovieExists) {
           movieData.changeMovieIndex(movieData.movieIndex - 1);
@@ -110,8 +115,13 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   }
 
   @override
+  void afterFirstLayout(BuildContext context) {
+    init();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (Provider.of<MovieData>(context).discoveryListData == null) init();
+    //if (Provider.of<MovieData>(context).discoveryListData == null) init();
     return Consumer<MovieData>(builder: (context, movieData, child) {
       return Column(
         children: <Widget>[
@@ -126,6 +136,9 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
             child: Consumer<Settings>(builder: (context, settings, child) {
               return FloatingActionButton(
                 onPressed: () async {
+                  if (!movieData.initialLoadSuccessful) {
+                    await init();
+                  }
                   if (movieData.nextMovie != null &&
                       movieData.currentMovie != movieData.nextMovie) {
                     goToNextMovie();

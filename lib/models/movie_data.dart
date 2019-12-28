@@ -18,6 +18,7 @@ class MovieData extends ChangeNotifier {
   int page = 1;
   bool endOfListIsReached = false;
   bool nextMovieExists = false;
+  bool initialLoadSuccessful = false;
   var movieList = new List<int>();
 
   void changeCurrentMovie(Movie newCurrentMovie) {
