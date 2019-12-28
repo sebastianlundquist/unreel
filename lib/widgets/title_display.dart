@@ -16,22 +16,32 @@ class TitleDisplay extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       children: <Widget>[
         ShaderMask(
-          child: isSaved
-              ? FutureBuilder<File>(
-                  future: Files.getLocalFile(
-                      movie.backdropPath.replaceFirst('/', '')),
-                  builder: (context, snapshot) =>
-                      snapshot != null && snapshot.data != null
-                          ? Image.file(snapshot.data)
-                          : Image.asset('images/transparent_backdrop.png'),
-                )
-              : FadeInImage(
-                  image: movie != null && movie.backdropPath != null
-                      ? NetworkImage('https://image.tmdb.org/t/p/w780' +
-                          movie.backdropPath)
-                      : AssetImage('images/transparent_backdrop.png'),
-                  placeholder: AssetImage('images/transparent_backdrop.png'),
-                ),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: isSaved
+                ? FutureBuilder<File>(
+                    future: Files.getLocalFile(
+                        movie.backdropPath.replaceFirst('/', '')),
+                    builder: (context, snapshot) =>
+                        snapshot != null && snapshot.data != null
+                            ? Image.file(
+                                snapshot.data,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                'images/transparent_backdrop.png',
+                                fit: BoxFit.cover,
+                              ),
+                  )
+                : FadeInImage(
+                    fit: BoxFit.cover,
+                    image: movie != null && movie.backdropPath != null
+                        ? NetworkImage('https://image.tmdb.org/t/p/w780' +
+                            movie.backdropPath)
+                        : AssetImage('images/transparent_backdrop.png'),
+                    placeholder: AssetImage('images/transparent_backdrop.png'),
+                  ),
+          ),
           shaderCallback: (Rect bounds) {
             return LinearGradient(
               begin: Alignment.topCenter,
