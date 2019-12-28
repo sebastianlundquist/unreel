@@ -62,8 +62,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                       setState(() {
                                         MovieDatabase.db.deleteMovie(movie.id);
                                       });
-                                      Files.deleteImage(movie.posterPath);
-                                      Files.deleteImage(movie.backdropPath);
+                                      if (movie.posterPath != null &&
+                                          movie.posterPath.isNotEmpty)
+                                        Files.deleteImage(movie.posterPath);
+                                      if (movie.backdropPath != null &&
+                                          movie.backdropPath.isNotEmpty)
+                                        Files.deleteImage(movie.backdropPath);
                                       Navigator.of(context).pop();
                                     },
                                   ),

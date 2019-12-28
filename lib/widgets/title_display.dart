@@ -18,7 +18,7 @@ class TitleDisplay extends StatelessWidget {
         ShaderMask(
           child: Container(
             width: MediaQuery.of(context).size.width,
-            child: isSaved
+            child: isSaved && movie.backdropPath != null
                 ? FutureBuilder<File>(
                     future: Files.getLocalFile(
                         movie.backdropPath.replaceFirst('/', '')),

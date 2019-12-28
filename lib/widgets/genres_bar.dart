@@ -105,12 +105,20 @@ class _GenresBarState extends State<GenresBar> {
                     );
                     if (isFavorite) {
                       MovieDatabase.db.newMovie(widget.movie);
-                      Files.saveImageToFile(widget.movie.posterPath, false);
-                      Files.saveImageToFile(widget.movie.backdropPath, true);
+                      if (widget.movie.posterPath != null &&
+                          widget.movie.posterPath.isNotEmpty)
+                        Files.saveImageToFile(widget.movie.posterPath, false);
+                      if (widget.movie.backdropPath != null &&
+                          widget.movie.backdropPath.isNotEmpty)
+                        Files.saveImageToFile(widget.movie.backdropPath, true);
                     } else {
                       MovieDatabase.db.deleteMovie(widget.movie.id);
-                      Files.deleteImage(widget.movie.backdropPath);
-                      Files.deleteImage(widget.movie.posterPath);
+                      if (widget.movie.posterPath != null &&
+                          widget.movie.posterPath.isNotEmpty)
+                        Files.deleteImage(widget.movie.posterPath);
+                      if (widget.movie.backdropPath != null &&
+                          widget.movie.backdropPath.isNotEmpty)
+                        Files.deleteImage(widget.movie.backdropPath);
                     }
                   },
                 );
