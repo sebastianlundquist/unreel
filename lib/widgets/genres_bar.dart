@@ -72,14 +72,16 @@ class _GenresBarState extends State<GenresBar> {
             ],
           ),
           Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: genreWidgets(
-                    widget.movie != null && widget.movie.genres != null
-                        ? widget.movie.genres
-                        : []),
+            child: Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: genreWidgets(
+                      widget.movie != null && widget.movie.genres != null
+                          ? widget.movie.genres
+                          : []),
+                ),
               ),
             ),
           ),
