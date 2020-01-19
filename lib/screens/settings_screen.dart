@@ -90,241 +90,295 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Consumer<Settings>(
           builder: (context, settings, child) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            return Stack(
               children: <Widget>[
-                Text(
-                  'I want to watch',
-                  style: Theme.of(context)
-                      .textTheme
-                      .display1
-                      .copyWith(fontStyle: FontStyle.italic),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          watchText,
-                          style: Theme.of(context)
-                              .textTheme
-                              .body1
-                              .copyWith(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DropdownButton<String>(
-                          value: settings.genre['name'],
-                          iconEnabledColor: Colors.amber,
-                          onChanged: (newValue) async {
-                            settings.changeGenre(newValue);
-                            newMovieSearch();
-                          },
-                          items: genreNames
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.info_outline,
+                      color: Colors.amber,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              backgroundColor: Color(0xFF131C25),
+                              elevation: 0.0,
+                              title: Text('About'),
+                              content: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 4.0),
+                                      child: Text(
+                                          'This product uses the TMDb API but is not endorsed or certified by TMDb.'),
+                                    ),
+                                    flex: 8,
+                                  ),
+                                  Expanded(
+                                    child: Image(
+                                      image: AssetImage(
+                                          'images/the_movie_db_logo_green.png'),
+                                    ),
+                                    flex: 2,
+                                  ),
+                                ],
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Close'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
                             );
-                          }).toList()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          'movie',
-                          style: Theme.of(context)
-                              .textTheme
-                              .body1
-                              .copyWith(fontStyle: FontStyle.italic),
-                        ),
-                      )
-                    ],
+                          });
+                    },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'I want to watch',
+                      style: Theme.of(context)
+                          .textTheme
+                          .display1
+                          .copyWith(fontStyle: FontStyle.italic),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
                         children: <Widget>[
-                          Text(
-                            'with a minimum',
-                            style: Theme.of(context)
-                                .textTheme
-                                .body1
-                                .copyWith(fontStyle: FontStyle.italic),
-                          ),
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
-                              settings.minRating.toString(),
-                              style: Theme.of(context).textTheme.display1,
+                              watchText,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .body1
+                                  .copyWith(fontStyle: FontStyle.italic),
                             ),
                           ),
-                          Text(
-                            'rating',
-                            style: Theme.of(context)
-                                .textTheme
-                                .body1
-                                .copyWith(fontStyle: FontStyle.italic),
+                          DropdownButton<String>(
+                              value: settings.genre['name'],
+                              iconEnabledColor: Colors.amber,
+                              onChanged: (newValue) async {
+                                settings.changeGenre(newValue);
+                                newMovieSearch();
+                              },
+                              items: genreNames.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList()),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              'movie',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .body1
+                                  .copyWith(fontStyle: FontStyle.italic),
+                            ),
                           )
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
                         children: <Widget>[
-                          Expanded(
-                            child: Slider(
-                              activeColor: Colors.amber,
-                              min: 0.0,
-                              max: 10.0,
-                              onChanged: (newRating) {
-                                settings.changeMinRating(newRating);
-                              },
-                              onChangeEnd: (newRating) {
-                                newMovieSearch();
-                              },
-                              value: settings.minRating,
-                              divisions: 20,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: <Widget>[
+                              Text(
+                                'with a minimum',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .body1
+                                    .copyWith(fontStyle: FontStyle.italic),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  settings.minRating.toString(),
+                                  style: Theme.of(context).textTheme.display1,
+                                ),
+                              ),
+                              Text(
+                                'rating',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .body1
+                                    .copyWith(fontStyle: FontStyle.italic),
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Expanded(
+                                child: Slider(
+                                  activeColor: Colors.amber,
+                                  min: 0.0,
+                                  max: 10.0,
+                                  onChanged: (newRating) {
+                                    settings.changeMinRating(newRating);
+                                  },
+                                  onChangeEnd: (newRating) {
+                                    newMovieSearch();
+                                  },
+                                  value: settings.minRating,
+                                  divisions: 20,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: <Widget>[
+                              Text(
+                                'and',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .body1
+                                    .copyWith(fontStyle: FontStyle.italic),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  settings.minVotes.toString(),
+                                  style: Theme.of(context).textTheme.display1,
+                                ),
+                              ),
+                              Text(
+                                'votes',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .body1
+                                    .copyWith(fontStyle: FontStyle.italic),
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Expanded(
+                                child: Slider(
+                                  activeColor: Colors.amber,
+                                  min: 0,
+                                  max: 10000,
+                                  onChanged: (newVotes) {
+                                    settings.changeMinVotes(newVotes.toInt());
+                                  },
+                                  onChangeEnd: (newVotes) {
+                                    newMovieSearch();
+                                  },
+                                  value: settings.minVotes.toDouble(),
+                                  divisions: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: <Widget>[
+                              Text(
+                                'between',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .body1
+                                    .copyWith(fontStyle: FontStyle.italic),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  settings.yearSpan.start.toInt().toString(),
+                                  style: Theme.of(context).textTheme.display1,
+                                ),
+                              ),
+                              Text(
+                                'and',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .body1
+                                    .copyWith(fontStyle: FontStyle.italic),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    8.0, 0.0, 0.0, 0.0),
+                                child: Text(
+                                  settings.yearSpan.end.toInt().toString(),
+                                  style: Theme.of(context).textTheme.display1,
+                                ),
+                              ),
+                              Text(
+                                '.',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .body1
+                                    .copyWith(fontStyle: FontStyle.italic),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Expanded(
+                                child: RangeSlider(
+                                  activeColor: Colors.amber,
+                                  min: DateTime.now().year.toDouble() - 100,
+                                  max: DateTime.now().year.toDouble(),
+                                  onChanged: (RangeValues values) {
+                                    settings.changeYearSpan(values);
+                                  },
+                                  onChangeEnd: (values) {
+                                    newMovieSearch();
+                                  },
+                                  values: settings.yearSpan,
+                                  divisions: 100,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: <Widget>[
-                          Text(
-                            'and',
-                            style: Theme.of(context)
-                                .textTheme
-                                .body1
-                                .copyWith(fontStyle: FontStyle.italic),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              settings.minVotes.toString(),
-                              style: Theme.of(context).textTheme.display1,
-                            ),
-                          ),
-                          Text(
-                            'votes',
-                            style: Theme.of(context)
-                                .textTheme
-                                .body1
-                                .copyWith(fontStyle: FontStyle.italic),
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            child: Slider(
-                              activeColor: Colors.amber,
-                              min: 0,
-                              max: 10000,
-                              onChanged: (newVotes) {
-                                settings.changeMinVotes(newVotes.toInt());
-                              },
-                              onChangeEnd: (newVotes) {
-                                newMovieSearch();
-                              },
-                              value: settings.minVotes.toDouble(),
-                              divisions: 10,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: <Widget>[
-                          Text(
-                            'between',
-                            style: Theme.of(context)
-                                .textTheme
-                                .body1
-                                .copyWith(fontStyle: FontStyle.italic),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              settings.yearSpan.start.toInt().toString(),
-                              style: Theme.of(context).textTheme.display1,
-                            ),
-                          ),
-                          Text(
-                            'and',
-                            style: Theme.of(context)
-                                .textTheme
-                                .body1
-                                .copyWith(fontStyle: FontStyle.italic),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                            child: Text(
-                              settings.yearSpan.end.toInt().toString(),
-                              style: Theme.of(context).textTheme.display1,
-                            ),
-                          ),
-                          Text(
-                            '.',
-                            style: Theme.of(context)
-                                .textTheme
-                                .body1
-                                .copyWith(fontStyle: FontStyle.italic),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            child: RangeSlider(
-                              activeColor: Colors.amber,
-                              min: DateTime.now().year.toDouble() - 100,
-                              max: DateTime.now().year.toDouble(),
-                              onChanged: (RangeValues values) {
-                                settings.changeYearSpan(values);
-                              },
-                              onChangeEnd: (values) {
-                                newMovieSearch();
-                              },
-                              values: settings.yearSpan,
-                              divisions: 100,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
               ],
             );
           },
